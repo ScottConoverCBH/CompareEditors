@@ -209,9 +209,7 @@ body{background:var(--bg);color:var(--text);font-family:'Georgia',serif;min-heig
 
   <!-- IMAGES -->
   <div class="img-controls">
-    <div class="img-counter" id="imgCounter">12 pairs — AutoHDR</div>
-    <div style="display:flex;align-items:center;gap:10px;">
-      <span class="editor-label el-autohdr" id="edLabel">AutoHDR</span>
+    <div style="display:flex;justify-content:flex-end;width:100%;">
       <div style="display:flex;gap:8px;">
         <button class="nav-btn" onclick="switchToOther(-1)">←</button>
         <button class="nav-btn" onclick="switchToOther(1)">→</button>
@@ -321,51 +319,54 @@ function preload(ed) {
 }
 
 function buildGrid() {
-  const grid = document.getElementById('imgGrid');
-  grid.innerHTML = '';
+  const grid    = document.getElementById('imgGrid');
   const ed      = currentEditor;
   const fileIdx = ed === 'kamel' ? 1 : 0;
 
-  PAIRS.forEach((pair, i) => {
-    const card = document.createElement('div');
-    card.className = 'img-card loading b' + ed[0];
+  // Fade out existing images, then swap
+  const existingImgs = grid.querySelectorAll('img');
+  existingImgs.forEach(img => { img.style.opacity = '0'; });
 
-    const src    = PATHS[ed] + pair[fileIdx];
-    const cached = imgCache[ed][src];
-    const img    = document.createElement('img');
-    img.decoding = 'async';
-    img.loading  = 'lazy';
-    img.alt      = `Photo ${i+1}`;
-    img.src      = src;
+  setTimeout(() => {
+    grid.innerHTML = '';
+    PAIRS.forEach((pair, i) => {
+      const card = document.createElement('div');
+      card.className = 'img-card b' + ed[0];
 
-    const badge = document.createElement('div');
-    badge.className = 'img-badge ib-' + ed[0];
-    badge.textContent = EDITORS[ed].label;
-
-    const num = document.createElement('div');
-    num.className = 'img-num';
-    num.textContent = String(i+1).padStart(2,'0');
-
-    if(cached && cached.complete && cached.naturalWidth > 0) {
-      card.classList.remove('loading');
-    } else {
-      img.onload  = () => card.classList.remove('loading');
+      const src = PATHS[ed] + pair[fileIdx];
+      const img = document.createElement('img');
+      img.decoding = 'async';
+      img.loading  = 'lazy';
+      img.alt      = `Photo ${i+1}`;
+      img.classList.add('loading-img'); // start invisible
+      img.src = src;
+      img.onload = () => {
+        card.classList.remove('loading');
+        img.classList.remove('loading-img'); // fade in
+      };
       img.onerror = () => {
         card.classList.remove('loading');
-        card.innerHTML = `<div class="img-ph"><div class="ph-ico">⚠</div><div class="ph-txt">${pair[fileIdx]}</div></div>`;
-        card.appendChild(badge); card.appendChild(num);
+        img.classList.remove('loading-img');
       };
       imgCache[ed][src] = img;
-    }
 
-    card.appendChild(img);
-    card.appendChild(badge);
-    card.appendChild(num);
-    grid.appendChild(card);
-  });
+      const badge = document.createElement('div');
+      badge.className = 'img-badge ib-' + ed[0];
+      badge.textContent = EDITORS[ed].label;
 
-  const other = ed === 'kamel' ? 'autohdr' : 'kamel';
-  setTimeout(() => preload(other), 400);
+      const num = document.createElement('div');
+      num.className = 'img-num';
+      num.textContent = String(i+1).padStart(2,'0');
+
+      card.appendChild(img);
+      card.appendChild(badge);
+      card.appendChild(num);
+      grid.appendChild(card);
+    });
+
+    const other = ed === 'kamel' ? 'autohdr' : 'kamel';
+    setTimeout(() => preload(other), 400);
+  }, 200); // short delay matches fade-out
 }
 
 // ── EDITOR SWITCH ─────────────────────────────────────────
@@ -375,10 +376,7 @@ function switchEditor(ed, animate=true) {
     t.className = 'tab';
     if(t.dataset.ed === ed) t.classList.add('a' + ed[0]);
   });
-  const el = document.getElementById('edLabel');
-  el.className = 'editor-label el-' + ed;
-  el.textContent = EDITORS[ed].label;
-  document.getElementById('imgCounter').textContent = `${PAIRS.length} pairs — ${EDITORS[ed].label}`;
+  document.getElementById('imgCounter').textContent = '';
   buildGrid();
   positionSliders(ed, animate);
   updateDots();
@@ -526,4 +524,4 @@ requestAnimationFrame(() => requestAnimationFrame(() => positionSliders(currentE
 window.addEventListener('resize', () => positionSliders(currentEditor, false));
 </script>
 </body>
-</html
+</html>
