@@ -20,6 +20,7 @@
 html{background:#000;}
 body{background:var(--bg);color:var(--text);font-family:'Georgia',serif;min-height:100vh;transition:background .3s,color .3s;}
 
+/* MENU */
 .menu{
   position:fixed;top:0;left:0;right:0;z-index:200;height:var(--menu-h);
   display:flex;align-items:center;justify-content:space-between;padding:0 28px;
@@ -29,11 +30,11 @@ body{background:var(--bg);color:var(--text);font-family:'Georgia',serif;min-heig
 .light .menu{background:rgba(240,237,232,0.88);}
 @media(max-width:680px){
   .menu{top:auto;bottom:0;border-bottom:none;border-top:1px solid var(--border);}
-  .main{padding-top:28px;padding-bottom:calc(var(--menu-h) + 28px);}
+  .main{padding-top:28px !important;padding-bottom:calc(var(--menu-h) + 28px);}
 }
+.menu-left{display:flex;flex-direction:column;}
 .menu-brand{font-style:italic;font-size:1.05rem;color:var(--text-dim);letter-spacing:.02em;white-space:nowrap;}
 .menu-address{font-family:'Courier New',monospace;font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);margin-top:2px;}
-.menu-left{display:flex;flex-direction:column;}
 .editor-tabs{display:flex;background:rgba(255,255,255,.05);border:1px solid var(--border);border-radius:50px;padding:4px;gap:3px;}
 .tab{padding:7px 18px;border-radius:50px;font-family:'Courier New',monospace;font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;color:var(--text-muted);border:none;background:transparent;transition:all .25s;}
 .tab:hover{color:var(--text);}
@@ -43,8 +44,10 @@ body{background:var(--bg);color:var(--text);font-family:'Georgia',serif;min-heig
 .theme-btn{background:transparent;border:1px solid var(--border);border-radius:50px;padding:6px 13px;color:var(--text-dim);font-family:'Courier New',monospace;font-size:.68rem;letter-spacing:.08em;cursor:pointer;transition:all .2s;}
 .theme-btn:hover{border-color:var(--text-dim);color:var(--text);}
 
+/* MAIN */
 .main{padding-top:calc(var(--menu-h) + 28px);padding-bottom:60px;max-width:1440px;margin:0 auto;padding-left:22px;padding-right:22px;}
 
+/* STATS */
 .stats-wrap{margin-bottom:28px;}
 .stats-bar{display:flex;align-items:center;justify-content:space-between;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:14px 20px;cursor:pointer;user-select:none;transition:border-radius .3s;}
 .stats-bar.open{border-radius:var(--radius) var(--radius) 0 0;}
@@ -55,6 +58,7 @@ body{background:var(--bg);color:var(--text);font-family:'Georgia',serif;min-heig
 .stats-body.open{max-height:1600px;}
 .stats-inner{padding:24px 20px;}
 
+/* Billing row */
 .billing-row{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:20px;}
 .vol-input-wrap{display:flex;align-items:center;background:var(--surface2);border:1px solid var(--border);border-radius:8px;overflow:hidden;}
 .vol-btn{background:none;border:none;color:var(--text-dim);font-size:1.1rem;padding:8px 14px;cursor:pointer;transition:color .2s;}
@@ -66,6 +70,7 @@ body{background:var(--bg);color:var(--text);font-family:'Georgia',serif;min-heig
 .billing-tab:hover{color:var(--text);}
 .billing-tab.billing-active{background:var(--surface);color:var(--text);border:1px solid var(--border);}
 
+/* Money cards */
 .money-row{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:12px;margin-bottom:24px;}
 @media(max-width:900px){.money-row{grid-template-columns:1fr 1fr;}}
 @media(max-width:680px){.money-row{grid-template-columns:1fr;}}
@@ -82,45 +87,50 @@ body{background:var(--bg);color:var(--text);font-family:'Georgia',serif;min-heig
 .mb-fill.autohdr{background:var(--autohdr);}
 .mb-val{font-family:'Courier New',monospace;font-size:.68rem;color:var(--text-dim);min-width:52px;text-align:right;transition:all .3s;}
 
+/* Ratings */
 .ratings-section{border-top:1px solid var(--border);padding-top:20px;}
 .ratings-label{font-family:'Courier New',monospace;font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:var(--text-muted);margin-bottom:14px;}
 .rating-row{display:flex;align-items:center;padding:10px 0;border-bottom:1px solid var(--border);}
 .rating-row:last-child{border-bottom:none;}
 .rr-metric{font-family:'Courier New',monospace;font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:var(--text-dim);width:140px;flex-shrink:0;}
 @media(max-width:680px){.rr-metric{width:90px;font-size:.58rem;}}
-
 .pill-track{display:inline-flex;background:var(--surface2);border:1px solid var(--border);border-radius:50px;padding:3px;position:relative;}
 .pill-slider{position:absolute;top:3px;bottom:3px;border-radius:50px;z-index:0;transition:left .55s cubic-bezier(0.34,1.4,0.64,1),width .4s cubic-bezier(.4,0,.2,1),background .45s ease;will-change:left,width;}
 .pill-opt{font-family:'Courier New',monospace;font-size:.6rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:5px 11px;border-radius:50px;color:var(--text-muted);position:relative;z-index:1;transition:color .3s ease;white-space:nowrap;user-select:none;}
 @media(max-width:480px){.pill-opt{padding:5px 7px;font-size:.54rem;letter-spacing:.04em;}}
 .pill-opt.active{color:#0a0a0a;}
 
-.img-controls{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:10px;}
-.img-counter{font-family:'Courier New',monospace;font-size:.68rem;letter-spacing:.12em;color:var(--text-muted);}
+/* Image grid */
+.img-controls{display:flex;align-items:center;justify-content:flex-end;margin-bottom:14px;gap:8px;}
 .nav-btn{background:var(--surface);border:1px solid var(--border);border-radius:50px;padding:8px 22px;color:var(--text);font-family:'Courier New',monospace;font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;transition:all .2s;user-select:none;}
 .nav-btn:hover{border-color:var(--text-dim);}
-.editor-label{font-family:'Courier New',monospace;font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;padding:6px 16px;border-radius:50px;transition:all .35s;}
-.el-kamel{background:rgba(240,217,140,.1);color:var(--kamel);border:1px solid rgba(240,217,140,.3);}
-.el-autohdr{background:rgba(126,184,232,.1);color:var(--autohdr);border:1px solid rgba(126,184,232,.3);}
 
 .image-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px;}
 @media(max-width:680px){.image-grid{grid-template-columns:1fr;}}
 
-.img-card{position:relative;overflow:hidden;aspect-ratio:4/3;background:var(--surface2);border:1px solid var(--border);transition:border-color .4s;}
-.img-card.bk{border-color:var(--kamel);}
-.img-card.ba{border-color:var(--autohdr);}
-.img-card img{width:100%;height:100%;object-fit:cover;display:block;}
-.img-ph{width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;}
-.ph-ico{font-size:1.6rem;opacity:.2;}
-.ph-txt{font-family:'Courier New',monospace;font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;opacity:.3;}
-.img-badge{position:absolute;bottom:10px;left:10px;padding:4px 10px;border-radius:50px;font-family:'Courier New',monospace;font-size:.58rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;backdrop-filter:blur(12px);}
-.ib-k{background:rgba(240,217,140,.18);color:var(--kamel);border:1px solid rgba(240,217,140,.25);}
-.ib-a{background:rgba(126,184,232,.18);color:var(--autohdr);border:1px solid rgba(126,184,232,.25);}
-.img-num{position:absolute;top:10px;right:10px;background:rgba(0,0,0,.5);backdrop-filter:blur(8px);color:var(--text-dim);font-family:'Courier New',monospace;font-size:.56rem;letter-spacing:.1em;padding:3px 8px;border-radius:50px;}
-.img-card.loading::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent 0%,rgba(255,255,255,.04) 50%,transparent 100%);background-size:200% 100%;animation:shimmer 1.4s infinite;}
-@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+/* The key CSS: both images stacked, class on grid toggles which is visible */
+.img-stack{position:absolute;inset:0;}
+.img-stack img{
+  position:absolute;inset:0;
+  width:100%;height:100%;
+  object-fit:cover;
+  opacity:0;
+  transition:none;
+}
+#imgGrid.show-autohdr .img-stack img.autohdr { opacity:1; z-index:2; }
+#imgGrid.show-kamel   .img-stack img.kamel   { opacity:1; z-index:2; }
 
-.dots{display:flex;gap:5px;justify-content:center;margin-top:16px;flex-wrap:wrap;}
+.img-card{position:relative;overflow:hidden;aspect-ratio:4/3;background:var(--surface2);border:1px solid var(--border);transition:border-color .3s;}
+#imgGrid.show-kamel   .img-card { border-color:var(--kamel); }
+#imgGrid.show-autohdr .img-card { border-color:var(--autohdr); }
+
+.img-badge{position:absolute;bottom:10px;left:10px;padding:4px 10px;border-radius:50px;font-family:'Courier New',monospace;font-size:.58rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;backdrop-filter:blur(12px);z-index:10;transition:all .18s;}
+#imgGrid.show-kamel   .img-badge { background:rgba(240,217,140,.18);color:var(--kamel);border:1px solid rgba(240,217,140,.25); }
+#imgGrid.show-autohdr .img-badge { background:rgba(126,184,232,.18);color:var(--autohdr);border:1px solid rgba(126,184,232,.25); }
+
+.img-num{position:absolute;top:10px;right:10px;background:rgba(0,0,0,.5);backdrop-filter:blur(8px);color:var(--text-dim);font-family:'Courier New',monospace;font-size:.56rem;letter-spacing:.1em;padding:3px 8px;border-radius:50px;z-index:10;}
+
+.dots{display:flex;gap:5px;justify-content:center;margin-top:16px;}
 .dot{width:5px;height:5px;border-radius:50%;background:var(--border);cursor:pointer;transition:all .2s;}
 .dot.on{background:var(--text-dim);transform:scale(1.4);}
 </style>
@@ -150,8 +160,6 @@ body{background:var(--bg);color:var(--text);font-family:'Georgia',serif;min-heig
     </div>
     <div class="stats-body" id="sBody">
       <div class="stats-inner">
-
-        <!-- Volume + Billing -->
         <div class="billing-row">
           <div class="vol-input-wrap">
             <button class="vol-btn" onclick="stepVol(-500)">−</button>
@@ -165,7 +173,6 @@ body{background:var(--bg);color:var(--text);font-family:'Georgia',serif;min-heig
           </div>
         </div>
 
-        <!-- Money Cards -->
         <div class="money-row">
           <div class="money-card">
             <div class="mc-label">Turnaround</div>
@@ -197,24 +204,17 @@ body{background:var(--bg);color:var(--text);font-family:'Georgia',serif;min-heig
           </div>
         </div>
 
-        <!-- Ratings -->
         <div class="ratings-section">
           <div class="ratings-label">Quality Ratings</div>
           <div id="ratingsContainer"></div>
         </div>
-
       </div>
     </div>
   </div>
 
-  <!-- IMAGES -->
   <div class="img-controls">
-    <div style="display:flex;justify-content:flex-end;width:100%;">
-      <div style="display:flex;gap:8px;">
-        <button class="nav-btn" onclick="switchToOther(-1)">←</button>
-        <button class="nav-btn" onclick="switchToOther(1)">→</button>
-      </div>
-    </div>
+    <button class="nav-btn" onclick="switchToOther(-1)">←</button>
+    <button class="nav-btn" onclick="switchToOther(1)">→</button>
   </div>
   <div class="image-grid" id="imgGrid"></div>
   <div class="dots" id="dotsRow"></div>
@@ -252,15 +252,72 @@ const EDITORS = {
 
 const SCALE  = ['bad','good','better','best'];
 const COLORS = { bad:'#e05252', good:'#d4a84b', better:'#c8c060', best:'#8ab870' };
+const RATE   = { monthly:{kamel:0.75,autohdr:0.45}, annually:{kamel:0.75,autohdr:0.41} };
 
-const RATE = {
-  monthly:  { kamel:0.75, autohdr:0.45 },
-  annually: { kamel:0.75, autohdr:0.41 }
-};
+let currentEditor = 'autohdr';
+let billingPeriod = 'monthly';
 
-let currentEditor  = 'autohdr';
-let billingPeriod  = 'monthly';
-const imgCache     = { kamel:{}, autohdr:{} };
+// ── GRID ─────────────────────────────────────────────────
+function buildGrid() {
+  const grid = document.getElementById('imgGrid');
+  if(grid.children.length) return; // build once only
+  grid.classList.add('show-autohdr');
+
+  PAIRS.forEach((pair, i) => {
+    const card = document.createElement('div');
+    card.className = 'img-card';
+
+    const stack = document.createElement('div');
+    stack.className = 'img-stack';
+
+    const imgA = document.createElement('img');
+    imgA.className = 'autohdr';
+    imgA.src = PATHS.autohdr + pair[0];
+    imgA.alt = `AutoHDR ${i+1}`;
+    imgA.decoding = 'auto';
+
+    const imgK = document.createElement('img');
+    imgK.className = 'kamel';
+    imgK.src = PATHS.kamel + pair[1];
+    imgK.alt = `Kamel ${i+1}`;
+    imgK.decoding = 'auto';
+
+    stack.appendChild(imgA);
+    stack.appendChild(imgK);
+    card.appendChild(stack);
+
+    const badge = document.createElement('div');
+    badge.className = 'img-badge';
+    badge.textContent = EDITORS[currentEditor].label;
+    card.appendChild(badge);
+
+    const num = document.createElement('div');
+    num.className = 'img-num';
+    num.textContent = String(i+1).padStart(2,'0');
+    card.appendChild(num);
+
+    grid.appendChild(card);
+  });
+}
+
+// ── SWITCH ───────────────────────────────────────────────
+function switchEditor(ed, animate=true) {
+  currentEditor = ed;
+  document.querySelectorAll('.tab').forEach(t => {
+    t.className = 'tab';
+    if(t.dataset.ed === ed) t.classList.add('a' + ed[0]);
+  });
+  const grid = document.getElementById('imgGrid');
+  grid.classList.toggle('show-autohdr', ed === 'autohdr');
+  grid.classList.toggle('show-kamel',   ed === 'kamel');
+  positionSliders(ed, animate);
+  updateDots();
+}
+
+function switchToOther(dir) {
+  const keys = Object.keys(EDITORS);
+  switchEditor(keys[(keys.indexOf(currentEditor) + dir + keys.length) % keys.length], true);
+}
 
 // ── CALC ─────────────────────────────────────────────────
 function fmt(n){ return '$' + n.toLocaleString('en-US',{maximumFractionDigits:0}); }
@@ -268,33 +325,27 @@ function fmt(n){ return '$' + n.toLocaleString('en-US',{maximumFractionDigits:0}
 function updateCalc() {
   const vol = Math.max(1, parseInt(document.getElementById('volInput').value) || 5000);
   const r   = RATE[billingPeriod];
-  const km  = vol * r.kamel;
-  const am  = vol * r.autohdr;
-  const ky  = km * 12;
-  const ay  = am * 12;
-  const maxM = Math.max(km, am);
-  const maxY = Math.max(ky, ay);
-  const maxR = Math.max(r.kamel, r.autohdr);
+  const km  = vol * r.kamel,  am  = vol * r.autohdr;
+  const ky  = km * 12,        ay  = am * 12;
+  const maxM = Math.max(km,am), maxY = Math.max(ky,ay), maxR = Math.max(r.kamel,r.autohdr);
 
   document.getElementById('rateKamel').textContent = '$' + r.kamel.toFixed(2);
   document.getElementById('rateAuto').textContent  = '$' + r.autohdr.toFixed(2);
-  document.getElementById('barRateK').style.width  = (r.kamel / maxR * 100) + '%';
-  document.getElementById('barRateA').style.width  = (r.autohdr / maxR * 100) + '%';
-
+  document.getElementById('barRateK').style.width  = (r.kamel/maxR*100)+'%';
+  document.getElementById('barRateA').style.width  = (r.autohdr/maxR*100)+'%';
   document.getElementById('valKamelM').textContent = fmt(km);
   document.getElementById('valAutoM').textContent  = fmt(am);
   document.getElementById('valKamelY').textContent = fmt(ky);
   document.getElementById('valAutoY').textContent  = fmt(ay);
-
-  document.getElementById('barKamelM').style.width = (km/maxM*100) + '%';
-  document.getElementById('barAutoM').style.width  = (am/maxM*100) + '%';
-  document.getElementById('barKamelY').style.width = (ky/maxY*100) + '%';
-  document.getElementById('barAutoY').style.width  = (ay/maxY*100) + '%';
+  document.getElementById('barKamelM').style.width = (km/maxM*100)+'%';
+  document.getElementById('barAutoM').style.width  = (am/maxM*100)+'%';
+  document.getElementById('barKamelY').style.width = (ky/maxY*100)+'%';
+  document.getElementById('barAutoY').style.width  = (ay/maxY*100)+'%';
 }
 
 function stepVol(delta) {
   const inp = document.getElementById('volInput');
-  inp.value = Math.max(1, (parseInt(inp.value) || 5000) + delta);
+  inp.value = Math.max(1,(parseInt(inp.value)||5000)+delta);
   updateCalc();
 }
 
@@ -306,122 +357,6 @@ function setBilling(period) {
   updateCalc();
 }
 
-// ── GRID ─────────────────────────────────────────────────
-function preload(ed) {
-  const fileIdx = ed === 'kamel' ? 1 : 0;
-  PAIRS.forEach(pair => {
-    const src = PATHS[ed] + pair[fileIdx];
-    if(!imgCache[ed][src]) {
-      const i = new Image(); i.decoding = 'async'; i.src = src;
-      imgCache[ed][src] = i;
-    }
-  });
-}
-
-function buildGrid() {
-  const grid    = document.getElementById('imgGrid');
-  const ed      = currentEditor;
-  const fileIdx = ed === 'kamel' ? 1 : 0;
-
-  // First time — build cards from scratch
-  if(grid.children.length !== PAIRS.length) {
-    grid.innerHTML = '';
-    PAIRS.forEach((pair, i) => {
-      const card = document.createElement('div');
-      card.className = 'img-card b' + ed[0];
-      card.style.position = 'relative';
-
-      const img = document.createElement('img');
-      img.decoding = 'async';
-      img.alt = `Photo ${i+1}`;
-      img.style.cssText = 'width:100%;height:100%;object-fit:cover;display:block;';
-      img.src = PATHS[ed] + pair[fileIdx];
-      imgCache[ed][PATHS[ed] + pair[fileIdx]] = img;
-      card.appendChild(img);
-
-      const badge = document.createElement('div');
-      badge.className = 'img-badge ib-' + ed[0];
-      badge.textContent = EDITORS[ed].label;
-      card.appendChild(badge);
-
-      const num = document.createElement('div');
-      num.className = 'img-num';
-      num.textContent = String(i+1).padStart(2,'0');
-      card.appendChild(num);
-
-      grid.appendChild(card);
-    });
-  } else {
-    // Swap: load new image on top, fade in over old one
-    Array.from(grid.children).forEach((card, i) => {
-      const pair    = PAIRS[i];
-      const src     = PATHS[ed] + pair[fileIdx];
-      const badge   = card.querySelector('.img-badge');
-      const oldImg  = card.querySelector('img');
-
-      // Update border color
-      card.className = 'img-card b' + ed[0];
-
-      // Update badge
-      if(badge) {
-        badge.className   = 'img-badge ib-' + ed[0];
-        badge.textContent = EDITORS[ed].label;
-      }
-
-      // New image absolutely positioned on top, fades in when ready
-      const newImg = document.createElement('img');
-      newImg.decoding = 'async';
-      newImg.alt      = `Photo ${i+1}`;
-      newImg.style.cssText = `
-        position:absolute;inset:0;width:100%;height:100%;
-        object-fit:cover;display:block;
-        opacity:0;transition:opacity .4s ease;
-      `;
-      newImg.src = src;
-      imgCache[ed][src] = newImg;
-
-      card.insertBefore(newImg, oldImg);
-
-      const onReady = () => {
-        newImg.style.opacity = '1';
-        // Remove old image after fade completes
-        setTimeout(() => { if(oldImg.parentNode) oldImg.remove(); }, 420);
-      };
-
-      if(newImg.complete && newImg.naturalWidth > 0) {
-        onReady();
-      } else {
-        newImg.onload  = onReady;
-        newImg.onerror = onReady;
-      }
-    });
-  }
-
-  const other = ed === 'kamel' ? 'autohdr' : 'kamel';
-  setTimeout(() => preload(other), 300);
-}
-
-// ── EDITOR SWITCH ─────────────────────────────────────────
-function switchEditor(ed, animate=true) {
-  currentEditor = ed;
-  document.querySelectorAll('.tab').forEach(t => {
-    t.className = 'tab';
-    if(t.dataset.ed === ed) t.classList.add('a' + ed[0]);
-  });
-  buildGrid();
-  positionSliders(ed, animate);
-  updateDots();
-  document.getElementById('imgCounter').textContent = '';
-  buildGrid();
-  positionSliders(ed, animate);
-  updateDots();
-}
-
-function switchToOther(dir) {
-  const keys = Object.keys(EDITORS);
-  switchEditor(keys[(keys.indexOf(currentEditor) + dir + keys.length) % keys.length], true);
-}
-
 // ── RATINGS ──────────────────────────────────────────────
 function buildRatings() {
   const container = document.getElementById('ratingsContainer');
@@ -430,30 +365,20 @@ function buildRatings() {
     const key = m.replace(/\s/g,'_');
     const row = document.createElement('div');
     row.className = 'rating-row';
-
     const label = document.createElement('div');
-    label.className = 'rr-metric';
-    label.textContent = m;
+    label.className = 'rr-metric'; label.textContent = m;
     row.appendChild(label);
-
     const track = document.createElement('div');
-    track.className = 'pill-track';
-    track.id = 'pt_' + key;
-
+    track.className = 'pill-track'; track.id = 'pt_'+key;
     const slider = document.createElement('div');
-    slider.className = 'pill-slider';
-    slider.id = 'ps_' + key;
+    slider.className = 'pill-slider'; slider.id = 'ps_'+key;
     slider.style.cssText = 'left:3px;width:0;opacity:0;transition:none;';
     track.appendChild(slider);
-
     SCALE.forEach(s => {
       const opt = document.createElement('div');
-      opt.className = 'pill-opt';
-      opt.id = 'po_' + key + '_' + s;
-      opt.textContent = s;
-      track.appendChild(opt);
+      opt.className = 'pill-opt'; opt.id = 'po_'+key+'_'+s;
+      opt.textContent = s; track.appendChild(opt);
     });
-
     row.appendChild(track);
     container.appendChild(row);
   });
@@ -463,47 +388,42 @@ function positionSliders(ed, animate) {
   Object.keys(EDITORS[ed].ratings).forEach(m => {
     const key    = m.replace(/\s/g,'_');
     const rating = EDITORS[ed].ratings[m];
-    const slider = document.getElementById('ps_' + key);
-    const track  = document.getElementById('pt_' + key);
-    if(!slider || !track) return;
-
+    const slider = document.getElementById('ps_'+key);
+    const track  = document.getElementById('pt_'+key);
+    if(!slider||!track) return;
     SCALE.forEach(s => {
-      const o = document.getElementById('po_' + key + '_' + s);
-      if(o){ o.classList.toggle('active', s===rating); o.style.color = s===rating ? '#0a0a0a' : ''; }
+      const o = document.getElementById('po_'+key+'_'+s);
+      if(o){ o.classList.toggle('active',s===rating); o.style.color=s===rating?'#0a0a0a':''; }
     });
-
     if(!rating){ slider.style.opacity='0'; return; }
-    const activeOpt = document.getElementById('po_' + key + '_' + rating);
+    const activeOpt = document.getElementById('po_'+key+'_'+rating);
     if(!activeOpt) return;
-    const tR = track.getBoundingClientRect();
-    const oR = activeOpt.getBoundingClientRect();
-
-    if(!animate) {
-      slider.style.transition = 'none';
-      slider.style.left = (oR.left - tR.left) + 'px';
-      slider.style.width = oR.width + 'px';
-      slider.style.background = COLORS[rating];
-      slider.style.opacity = '1';
+    const tR = track.getBoundingClientRect(), oR = activeOpt.getBoundingClientRect();
+    if(!animate){
+      slider.style.transition='none';
+      slider.style.left=(oR.left-tR.left)+'px';
+      slider.style.width=oR.width+'px';
+      slider.style.background=COLORS[rating];
+      slider.style.opacity='1';
       slider.getBoundingClientRect();
-      slider.style.transition = '';
+      slider.style.transition='';
     } else {
-      slider.style.transition = '';
-      slider.style.left = (oR.left - tR.left) + 'px';
-      slider.style.width = oR.width + 'px';
-      slider.style.background = COLORS[rating];
-      slider.style.opacity = '1';
+      slider.style.transition='';
+      slider.style.left=(oR.left-tR.left)+'px';
+      slider.style.width=oR.width+'px';
+      slider.style.background=COLORS[rating];
+      slider.style.opacity='1';
     }
   });
 }
 
 // ── DOTS ─────────────────────────────────────────────────
 function updateDots() {
-  const c = document.getElementById('dotsRow');
-  c.innerHTML = '';
+  const c = document.getElementById('dotsRow'); c.innerHTML='';
   Object.keys(EDITORS).forEach(ed => {
     const d = document.createElement('div');
-    d.className = 'dot' + (ed===currentEditor?' on':'');
-    d.onclick = () => switchEditor(ed, true);
+    d.className = 'dot'+(ed===currentEditor?' on':'');
+    d.onclick = () => switchEditor(ed,true);
     c.appendChild(d);
   });
 }
@@ -513,6 +433,7 @@ function toggleStats() {
   document.getElementById('sBody').classList.toggle('open');
   document.getElementById('sChev').classList.toggle('open');
   document.getElementById('sBar').classList.toggle('open');
+  setTimeout(() => positionSliders(currentEditor, false), 520);
 }
 
 // ── THEME ────────────────────────────────────────────────
@@ -523,39 +444,36 @@ function toggleTheme() {
 
 // ── KEYBOARD ─────────────────────────────────────────────
 document.addEventListener('keydown', e => {
-  if(e.key === 'ArrowLeft')  switchToOther(-1);
-  if(e.key === 'ArrowRight') switchToOther(1);
+  if(e.key==='ArrowLeft')  switchToOther(-1);
+  if(e.key==='ArrowRight') switchToOther(1);
 });
 
-// ── SWIPE ────────────────────────────────────────────────
-let swipeX = null;
-let trackpadAccX = 0, trackpadTimer = null;
-
-document.addEventListener('touchstart', e => { swipeX = e.touches[0].clientX; }, {passive:true});
-document.addEventListener('touchend', e => {
-  if(swipeX === null) return;
+// ── SWIPE (touch + trackpad) ──────────────────────────────
+let swipeX = null, trackpadAccX = 0, trackpadTimer = null;
+document.addEventListener('touchstart', e=>{ swipeX=e.touches[0].clientX; },{passive:true});
+document.addEventListener('touchend', e=>{
+  if(swipeX===null) return;
   const dx = e.changedTouches[0].clientX - swipeX;
-  if(Math.abs(dx) > 50) switchToOther(dx < 0 ? 1 : -1);
-  swipeX = null;
-}, {passive:true});
-
-document.addEventListener('wheel', e => {
-  if(Math.abs(e.deltaX) < Math.abs(e.deltaY)) return;
+  if(Math.abs(dx)>50) switchToOther(dx<0?1:-1);
+  swipeX=null;
+},{passive:true});
+document.addEventListener('wheel', e=>{
+  if(Math.abs(e.deltaX)<Math.abs(e.deltaY)) return;
   e.preventDefault();
   trackpadAccX += e.deltaX;
   clearTimeout(trackpadTimer);
-  trackpadTimer = setTimeout(() => {
-    if(Math.abs(trackpadAccX) > 60) switchToOther(trackpadAccX > 0 ? 1 : -1);
-    trackpadAccX = 0;
-  }, 80);
-}, {passive:false});
+  trackpadTimer = setTimeout(()=>{
+    if(Math.abs(trackpadAccX)>60) switchToOther(trackpadAccX>0?1:-1);
+    trackpadAccX=0;
+  },80);
+},{passive:false});
 
 // ── INIT ─────────────────────────────────────────────────
 buildRatings();
 buildGrid();
 updateDots();
 updateCalc();
-requestAnimationFrame(() => requestAnimationFrame(() => positionSliders(currentEditor, false)));
+setTimeout(() => positionSliders(currentEditor, false), 1000);
 window.addEventListener('resize', () => positionSliders(currentEditor, false));
 </script>
 </body>
