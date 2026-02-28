@@ -256,7 +256,7 @@ body{background:var(--bg);color:var(--text);font-family:'Georgia',serif;min-heig
               <div class="money-bar-row"><div class="mb-name autohdr">AutoHDR</div><div class="mb-track"><div id="barAutoM" class="mb-fill autohdr" style="width:60%"></div></div><div class="mb-val" id="valAutoM">$2,250</div></div>
             </div>
           </div>
-          <div class="money-card">
+        <div class="money-card" onclick="unlockRatings()" style="cursor:pointer;">
             <div class="mc-label">Est. Annual</div>
             <div class="money-bars">
               <div class="money-bar-row"><div class="mb-name kamel">Kamel</div><div class="mb-track"><div id="barKamelY" class="mb-fill kamel" style="width:100%"></div></div><div class="mb-val" id="valKamelY">$45,000</div></div>
@@ -265,7 +265,7 @@ body{background:var(--bg);color:var(--text);font-family:'Georgia',serif;min-heig
           </div>
         </div>
 
-        <div class="ratings-section">
+        <div class="ratings-section" id="ratingsSection" style="display:none;border-top:1px solid var(--border);padding-top:20px;">
           <div class="ratings-label">Quality Ratings</div>
           <div id="ratingsContainer"></div>
         </div>
@@ -479,6 +479,14 @@ function setBilling(period) {
     t.classList.toggle('billing-active', t.dataset.period === period);
   });
   updateCalc();
+}
+
+function unlockRatings() {
+  const s = document.getElementById('ratingsSection');
+  if(s.style.display === 'none') {
+    s.style.display = 'block';
+    setTimeout(() => positionSliders(currentEditor, false), 50);
+  }
 }
 
 // ── RATINGS ──────────────────────────────────────────────
