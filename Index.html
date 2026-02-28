@@ -17,7 +17,7 @@
   --text:#18181a; --text-muted:#9a9a9f; --text-dim:#6a6a6f;
 }
 *{margin:0;padding:0;box-sizing:border-box;}
-html{background:#000;}
+html { background:#000; scroll-behavior: auto; }
 body{background:var(--bg);color:var(--text);font-family:'Georgia',serif;min-height:100vh;transition:background .3s,color .3s;}
 
 /* MENU */
@@ -100,7 +100,46 @@ body{background:var(--bg);color:var(--text);font-family:'Georgia',serif;min-heig
 @media(max-width:480px){.pill-opt{padding:5px 7px;font-size:.54rem;letter-spacing:.04em;}}
 .pill-opt.active{color:#0a0a0a;}
 
-/* Image grid */
+/* PROPERTY DROPDOWN */
+.property-wrap { position:relative; }
+.property-btn {
+  display:flex; align-items:center; gap:8px;
+  background:rgba(255,255,255,.05); border:1px solid var(--border);
+  border-radius:50px; padding:7px 16px;
+  font-family:'Courier New',monospace; font-size:.68rem;
+  font-weight:700; letter-spacing:.1em; text-transform:uppercase;
+  color:var(--text); cursor:pointer; white-space:nowrap;
+  transition:border-color .2s;
+}
+.property-btn:hover { border-color:var(--text-dim); }
+.property-btn .pb-chevron { font-size:.55rem; color:var(--text-muted); transition:transform .25s; }
+.property-btn.open .pb-chevron { transform:rotate(180deg); }
+.property-dropdown {
+  display:none; position:absolute; top:calc(100% + 8px); left:0;
+  background:var(--surface); border:1px solid var(--border);
+  border-radius:var(--radius); overflow:hidden; min-width:220px;
+  z-index:300; box-shadow:0 8px 32px rgba(0,0,0,.4);
+}
+.property-dropdown.open { display:block; }
+.pd-item {
+  display:flex; flex-direction:column;
+  padding:12px 16px; cursor:pointer;
+  border-bottom:1px solid var(--border);
+  transition:background .15s;
+}
+.pd-item:last-child { border-bottom:none; }
+.pd-item:hover { background:var(--surface2); }
+.pd-item.active { background:var(--surface2); }
+.pd-label {
+  font-family:'Courier New',monospace; font-size:.68rem;
+  font-weight:700; letter-spacing:.1em; text-transform:uppercase;
+  color:var(--text);
+}
+.pd-sub {
+  font-family:'Courier New',monospace; font-size:.58rem;
+  letter-spacing:.08em; color:var(--text-muted); margin-top:2px;
+}
+.pd-item.active .pd-label { color:var(--autohdr); }
 .img-controls{display:flex;align-items:center;justify-content:flex-end;margin-bottom:14px;gap:8px;}
 .nav-btn{background:var(--surface);border:1px solid var(--border);border-radius:50px;padding:8px 22px;color:var(--text);font-family:'Courier New',monospace;font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;transition:all .2s;user-select:none;}
 .nav-btn:hover{border-color:var(--text-dim);}
@@ -140,8 +179,30 @@ body{background:var(--bg);color:var(--text);font-family:'Georgia',serif;min-heig
 <nav class="menu">
   <div class="menu-left">
     <div class="menu-brand">Edit Compare</div>
-    <div class="menu-address">7106 E Shields Dr — Nampa</div>
   </div>
+
+  <!-- Property dropdown -->
+  <div class="property-wrap" id="propWrap">
+    <button class="property-btn" id="propBtn" onclick="togglePropDropdown()">
+      <span id="propBtnLabel">7106 E Shields Dr</span>
+      <span class="pb-chevron">▼</span>
+    </button>
+    <div class="property-dropdown" id="propDropdown">
+      <div class="pd-item active" data-prop="0" onclick="selectProperty(0)">
+        <div class="pd-label">7106 E Shields Dr</div>
+        <div class="pd-sub">Nampa, ID — 12 pairs</div>
+      </div>
+      <div class="pd-item" data-prop="1" onclick="selectProperty(1)">
+        <div class="pd-label">Property 2</div>
+        <div class="pd-sub">Address TBD — placeholder</div>
+      </div>
+      <div class="pd-item" data-prop="2" onclick="selectProperty(2)">
+        <div class="pd-label">Property 3</div>
+        <div class="pd-sub">Address TBD — placeholder</div>
+      </div>
+    </div>
+  </div>
+
   <div class="editor-tabs">
     <button class="tab aa" data-ed="autohdr" onclick="switchEditor('autohdr')">AutoHDR</button>
     <button class="tab" data-ed="kamel" onclick="switchEditor('kamel')">Kamel</button>
@@ -222,20 +283,39 @@ body{background:var(--bg);color:var(--text);font-family:'Georgia',serif;min-heig
 </main>
 
 <script>
-const PAIRS = [
-  ['7106 E Shields Dr_Nampa (1).jpg',  '7106 E Shields Dr_Nampa (3).jpg'],
-  ['7106 E Shields Dr_Nampa (4).jpg',  '7106 E Shields Dr_Nampa (6).jpg'],
-  ['7106 E Shields Dr_Nampa (7).jpg',  '7106 E Shields Dr_Nampa (9).jpg'],
-  ['7106 E Shields Dr_Nampa (10).jpg', '7106 E Shields Dr_Nampa (12).jpg'],
-  ['7106 E Shields Dr_Nampa (22).jpg', '7106 E Shields Dr_Nampa (24).jpg'],
-  ['7106 E Shields Dr_Nampa (25).jpg', '7106 E Shields Dr_Nampa (27).jpg'],
-  ['7106 E Shields Dr_Nampa (31).jpg', '7106 E Shields Dr_Nampa (33).jpg'],
-  ['7106 E Shields Dr_Nampa (37).jpg', '7106 E Shields Dr_Nampa (39).jpg'],
-  ['7106 E Shields Dr_Nampa (40).jpg', '7106 E Shields Dr_Nampa (42).jpg'],
-  ['7106 E Shields Dr_Nampa (43).jpg', '7106 E Shields Dr_Nampa (45).jpg'],
-  ['7106 E Shields Dr_Nampa (76).jpg', '7106 E Shields Dr_Nampa (78).jpg'],
-  ['7106 E Shields Dr_Nampa (70).jpg', '7106 E Shields Dr_Nampa (72).jpg'],
+const PROPERTIES = [
+  {
+    label: '7106 E Shields Dr',
+    sub: 'Nampa, ID',
+    pairs: [
+      ['7106 E Shields Dr_Nampa (1).jpg',  '7106 E Shields Dr_Nampa (3).jpg'],
+      ['7106 E Shields Dr_Nampa (4).jpg',  '7106 E Shields Dr_Nampa (6).jpg'],
+      ['7106 E Shields Dr_Nampa (7).jpg',  '7106 E Shields Dr_Nampa (9).jpg'],
+      ['7106 E Shields Dr_Nampa (10).jpg', '7106 E Shields Dr_Nampa (12).jpg'],
+      ['7106 E Shields Dr_Nampa (22).jpg', '7106 E Shields Dr_Nampa (24).jpg'],
+      ['7106 E Shields Dr_Nampa (25).jpg', '7106 E Shields Dr_Nampa (27).jpg'],
+      ['7106 E Shields Dr_Nampa (31).jpg', '7106 E Shields Dr_Nampa (33).jpg'],
+      ['7106 E Shields Dr_Nampa (37).jpg', '7106 E Shields Dr_Nampa (39).jpg'],
+      ['7106 E Shields Dr_Nampa (40).jpg', '7106 E Shields Dr_Nampa (42).jpg'],
+      ['7106 E Shields Dr_Nampa (43).jpg', '7106 E Shields Dr_Nampa (45).jpg'],
+      ['7106 E Shields Dr_Nampa (76).jpg', '7106 E Shields Dr_Nampa (78).jpg'],
+      ['7106 E Shields Dr_Nampa (70).jpg', '7106 E Shields Dr_Nampa (72).jpg'],
+    ]
+  },
+  {
+    label: 'Property 2',
+    sub: 'Address TBD',
+    pairs: [] // add pairs here when ready
+  },
+  {
+    label: 'Property 3',
+    sub: 'Address TBD',
+    pairs: [] // add pairs here when ready
+  }
 ];
+
+let currentProperty = 0;
+let PAIRS = PROPERTIES[0].pairs;
 
 const PATHS = { autohdr:'AUTOHDR_web/', kamel:'Editors_web/' };
 
@@ -257,11 +337,55 @@ const RATE   = { monthly:{kamel:0.75,autohdr:0.45}, annually:{kamel:0.75,autohdr
 let currentEditor = 'autohdr';
 let billingPeriod = 'monthly';
 
+// ── PROPERTY SWITCHER ────────────────────────────────────
+function togglePropDropdown() {
+  const btn = document.getElementById('propBtn');
+  const dd  = document.getElementById('propDropdown');
+  btn.classList.toggle('open');
+  dd.classList.toggle('open');
+}
+
+function selectProperty(idx) {
+  currentProperty = idx;
+  PAIRS = PROPERTIES[idx].pairs;
+
+  // Update button label
+  document.getElementById('propBtnLabel').textContent = PROPERTIES[idx].label;
+
+  // Update active state in dropdown
+  document.querySelectorAll('.pd-item').forEach(el => {
+    el.classList.toggle('active', parseInt(el.dataset.prop) === idx);
+  });
+
+  // Close dropdown
+  document.getElementById('propBtn').classList.remove('open');
+  document.getElementById('propDropdown').classList.remove('open');
+
+  // Rebuild grid for new property
+  const grid = document.getElementById('imgGrid');
+  grid.innerHTML = '';
+  buildGrid();
+}
+
+// Close dropdown when clicking outside
+document.addEventListener('click', e => {
+  const wrap = document.getElementById('propWrap');
+  if(wrap && !wrap.contains(e.target)) {
+    document.getElementById('propBtn').classList.remove('open');
+    document.getElementById('propDropdown').classList.remove('open');
+  }
+});
+
 // ── GRID ─────────────────────────────────────────────────
 function buildGrid() {
   const grid = document.getElementById('imgGrid');
-  if(grid.children.length) return; // build once only
-  grid.classList.add('show-autohdr');
+  grid.classList.remove('show-autohdr', 'show-kamel');
+  grid.classList.add('show-' + currentEditor);
+
+  if(!PAIRS.length) {
+    grid.innerHTML = `<div style="grid-column:1/-1;padding:60px 0;text-align:center;font-family:'Courier New',monospace;font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;color:var(--text-muted);">No images yet — coming soon</div>`;
+    return;
+  }
 
   PAIRS.forEach((pair, i) => {
     const card = document.createElement('div');
@@ -443,9 +567,28 @@ function toggleTheme() {
 }
 
 // ── KEYBOARD ─────────────────────────────────────────────
+let currentCardIndex = 0;
+let scrollRaf = null;
+
+function scrollToCard(index) {
+  const cards = Array.from(document.querySelectorAll('.img-card'));
+  if(!cards.length) return;
+  const cols = window.innerWidth > 680 ? 2 : 1;
+  currentCardIndex = Math.max(0, Math.min(index, cards.length - 1));
+  const menuH = document.querySelector('.menu').offsetHeight + 16;
+  const target = cards[currentCardIndex].getBoundingClientRect().top + window.scrollY - menuH;
+  if(scrollRaf) cancelAnimationFrame(scrollRaf);
+  window.scrollTo({ top: target, behavior: 'instant' });
+}
+
 document.addEventListener('keydown', e => {
-  if(e.key==='ArrowLeft')  switchToOther(-1);
-  if(e.key==='ArrowRight') switchToOther(1);
+  if(e.key === 'ArrowLeft')  { switchToOther(-1); return; }
+  if(e.key === 'ArrowRight') { switchToOther(1);  return; }
+  if(e.key === 'n' || e.key === 'N') { selectProperty(Math.min(currentProperty + 1, PROPERTIES.length - 1)); return; }
+  if(e.key === 'p' || e.key === 'P') { selectProperty(Math.max(currentProperty - 1, 0)); return; }
+  const cols = window.innerWidth > 680 ? 2 : 1;
+  if(e.key === 'ArrowDown')  { e.preventDefault(); scrollToCard(currentCardIndex + cols); }
+  if(e.key === 'ArrowUp')    { e.preventDefault(); scrollToCard(currentCardIndex - cols); }
 });
 
 // ── SWIPE (touch + trackpad) ──────────────────────────────
