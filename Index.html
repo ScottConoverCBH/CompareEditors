@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Edit Compare — 7106 E Shields Dr</title>
+<style>
+:root {
+  --bg:#000; --surface:#0f0f0f; --surface2:#161618; --border:#222224;
+  --text:#e8e6e0; --text-muted:#5a5a60; --text-dim:#8a8a90;
+  --kamel:#f0d98c; --autohdr:#7eb8e8;
+  --r-bad:#e05252; --r-good:#d4a84b; --r-better:#c8c060; --r-best:#8ab870;
+  --menu-h:68px; --radius:10px;
+}
+.light {
+  --bg:#f0ede8; --surface:#faf9f7; --surface2:#e8e4de; --border:#d0ccc6;
+  --text:#18181a; --text-muted:#9a9a9f; --text-dim:#6a6a6f;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{background:#000;}
+body{background:var(--bg);color:var(--text);font-family:'Georgia',serif;min-height:100vh;transition:background .3s,color .3s;}
+
+.menu{
+  position:fixed;top:0;left:0;right:0;z-index:200;height:var(--menu-h);
+  display:flex;align-items:center;justify-content:space-between;padding:0 28px;
+  backdrop-filter:blur(24px) saturate(1.5);-webkit-backdrop-filter:blur(24px) saturate(1.5);
+  background:rgba(0,0,0,0.82);border-bottom:1px solid var(--border);
+}
+.light .menu{background:rgba(240,237,232,0.88);}
+@media(max-width:680px){
+  .menu{top:auto;bottom:0;border-bottom:none;border-top:1px solid var(--border);}
+  .main{padding-top:28px;padding-bottom:calc(var(--menu-h) + 28px);}
+}
+.menu-brand{font-style:italic;font-size:1.05rem;color:var(--text-dim);letter-spacing:.02em;white-space:nowrap;}
+.menu-address{font-family:'Courier New',monospace;font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);margin-top:2px;}
+.menu-left{display:flex;flex-direction:column;}
+.editor-tabs{display:flex;background:rgba(255,255,255,.05);border:1px solid var(--border);border-radius:50px;padding:4px;gap:3px;}
+.tab{padding:7px 18px;border-radius:50px;font-family:'Courier New',monospace;font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;color:var(--text-muted);border:none;background:transparent;transition:all .25s;}
+.tab:hover{color:var(--text);}
+.tab.ak{background:var(--kamel);color:#1a1a0a;}
+.tab.aa{background:var(--autohdr);color:#0a1520;}
+.menu-right{display:flex;align-items:center;gap:10px;}
+.theme-btn{background:transparent;border:1px solid var(--border);border-radius:50px;padding:6px 13px;color:var(--text-dim);font-family:'Courier New',monospace;font-size:.68rem;letter-spacing:.08em;cursor:pointer;transition:all .2s;}
+.theme-btn:hover{border-color:var(--text-dim);color:var(--text);}
+
+.main{padding-top:calc(var(--menu-h) + 28px);padding-bottom:60px;max-width:1440px;margin:0 auto;padding-left:22px;padding-right:22px;}
+
+.stats-wrap{margin-bottom:28px;}
+.stats-bar{display:flex;align-items:center;justify-content:space-between;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:14px 20px;cursor:pointer;user-select:none;transition:border-radius .3s;}
+.stats-bar.open{border-radius:var(--radius) var(--radius) 0 0;}
+.stats-bar-title{font-family:'Courier New',monospace;font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;}
+.chevron{font-size:.65rem;color:var(--text-muted);transition:transform .35s;}
+.chevron.open{transform:rotate(180deg);}
+.stats-body{max-height:0;overflow:hidden;transition:max-height .5s cubic-bezier(.4,0,.2,1);background:var(--surface);border:1px solid var(--border);border-top:none;border-radius:0 0 var(--radius) var(--radius);}
+.stats-body.open{max-height:1600px;}
+.stats-inner{padding:24px 20px;}
+
+.billing-row{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:20px;}
+.vol-input-wrap{display:flex;align-items:center;background:var(--surface2);border:1px solid var(--border);border-radius:8px;overflow:hidden;}
+.vol-btn{background:none;border:none;color:var(--text-dim);font-size:1.1rem;padding:8px 14px;cursor:pointer;transition:color .2s;}
+.vol-btn:hover{color:var(--text);}
+.vol-input{background:none;border:none;border-left:1px solid var(--border);border-right:1px solid var(--border);color:var(--text);font-family:'Courier New',monospace;font-size:.85rem;font-weight:700;letter-spacing:.06em;width:90px;text-align:center;padding:8px 4px;outline:none;}
+.vol-label{font-family:'Courier New',monospace;font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);}
+.billing-tabs{display:flex;background:var(--surface2);border:1px solid var(--border);border-radius:50px;padding:3px;gap:2px;margin-left:auto;}
+.billing-tab{padding:6px 14px;border-radius:50px;font-family:'Courier New',monospace;font-size:.65rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;color:var(--text-muted);border:none;background:transparent;transition:all .25s;white-space:nowrap;}
+.billing-tab:hover{color:var(--text);}
+.billing-tab.billing-active{background:var(--surface);color:var(--text);border:1px solid var(--border);}
+
+.money-row{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:12px;margin-bottom:24px;}
+@media(max-width:900px){.money-row{grid-template-columns:1fr 1fr;}}
+@media(max-width:680px){.money-row{grid-template-columns:1fr;}}
+.money-card{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:16px;}
+.mc-label{font-family:'Courier New',monospace;font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:var(--text-muted);margin-bottom:10px;}
+.money-bars{display:flex;flex-direction:column;gap:8px;}
+.money-bar-row{display:flex;align-items:center;gap:8px;}
+.mb-name{font-family:'Courier New',monospace;font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;width:62px;flex-shrink:0;}
+.mb-name.kamel{color:var(--kamel);}
+.mb-name.autohdr{color:var(--autohdr);}
+.mb-track{flex:1;height:5px;background:var(--border);border-radius:3px;overflow:hidden;}
+.mb-fill{height:100%;border-radius:3px;transition:width .5s cubic-bezier(.4,0,.2,1);}
+.mb-fill.kamel{background:var(--kamel);}
+.mb-fill.autohdr{background:var(--autohdr);}
+.mb-val{font-family:'Courier New',monospace;font-size:.68rem;color:var(--text-dim);min-width:52px;text-align:right;transition:all .3s;}
+
+.ratings-section{border-top:1px solid var(--border);padding-top:20px;}
+.ratings-label{font-family:'Courier New',monospace;font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:var(--text-muted);margin-bottom:14px;}
+.rating-row{display:flex;align-items:center;padding:10px 0;border-bottom:1px solid var(--border);}
+.rating-row:last-child{border-bottom:none;}
+.rr-metric{font-family:'Courier New',monospace;font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:var(--text-dim);width:140px;flex-shrink:0;}
+@media(max-width:680px){.rr-metric{width:90px;font-size:.58rem;}}
+
+.pill-track{display:inline-flex;background:var(--surface2);border:1px solid var(--border);border-radius:50px;padding:3px;position:relative;}
+.pill-slider{position:absolute;top:3px;bottom:3px;border-radius:50px;z-index:0;transition:left .55s cubic-bezier(0.34,1.4,0.64,1),width .4s cubic-bezier(.4,0,.2,1),background .45s ease;will-change:left,width;}
+.pill-opt{font-family:'Courier New',monospace;font-size:.6rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:5px 11px;border-radius:50px;color:var(--text-muted);position:relative;z-index:1;transition:color .3s ease;white-space:nowrap;user-select:none;}
+@media(max-width:480px){.pill-opt{padding:5px 7px;font-size:.54rem;letter-spacing:.04em;}}
+.pill-opt.active{color:#0a0a0a;}
+
+.img-controls{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:10px;}
+.img-counter{font-family:'Courier New',monospace;font-size:.68rem;letter-spacing:.12em;color:var(--text-muted);}
+.nav-btn{background:var(--surface);border:1px solid var(--border);border-radius:50px;padding:8px 22px;color:var(--text);font-family:'Courier New',monospace;font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;transition:all .2s;user-select:none;}
+.nav-btn:hover{border-color:var(--text-dim);}
+.editor-label{font-family:'Courier New',monospace;font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;padding:6px 16px;border-radius:50px;transition:all .35s;}
+.el-kamel{background:rgba(240,217,140,.1);color:var(--kamel);border:1px solid rgba(240,217,140,.3);}
+.el-autohdr{background:rgba(126,184,232,.1);color:var(--autohdr);border:1px solid rgba(126,184,232,.3);}
+
+.image-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px;}
+@media(max-width:680px){.image-grid{grid-template-columns:1fr;}}
+
+.img-card{position:relative;overflow:hidden;aspect-ratio:4/3;background:var(--surface2);border:1px solid var(--border);transition:border-color .4s;}
+.img-card.bk{border-color:var(--kamel);}
+.img-card.ba{border-color:var(--autohdr);}
+.img-card img{width:100%;height:100%;object-fit:cover;display:block;}
+.img-ph{width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;}
+.ph-ico{font-size:1.6rem;opacity:.2;}
+.ph-txt{font-family:'Courier New',monospace;font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;opacity:.3;}
+.img-badge{position:absolute;bottom:10px;left:10px;padding:4px 10px;border-radius:50px;font-family:'Courier New',monospace;font-size:.58rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;backdrop-filter:blur(12px);}
+.ib-k{background:rgba(240,217,140,.18);color:var(--kamel);border:1px solid rgba(240,217,140,.25);}
+.ib-a{background:rgba(126,184,232,.18);color:var(--autohdr);border:1px solid rgba(126,184,232,.25);}
+.img-num{position:absolute;top:10px;right:10px;background:rgba(0,0,0,.5);backdrop-filter:blur(8px);color:var(--text-dim);font-family:'Courier New',monospace;font-size:.56rem;letter-spacing:.1em;padding:3px 8px;border-radius:50px;}
+.img-card.loading::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent 0%,rgba(255,255,255,.04) 50%,transparent 100%);background-size:200% 100%;animation:shimmer 1.4s infinite;}
+@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+
+.dots{display:flex;gap:5px;justify-content:center;margin-top:16px;flex-wrap:wrap;}
+.dot{width:5px;height:5px;border-radius:50%;background:var(--border);cursor:pointer;transition:all .2s;}
+.dot.on{background:var(--text-dim);transform:scale(1.4);}
+</style>
+</head>
+<body>
+
+<nav class="menu">
+  <div class="menu-left">
+    <div class="menu-brand">Edit Compare</div>
+    <div class="menu-address">7106 E Shields Dr — Nampa</div>
+  </div>
+  <div class="editor-tabs">
+    <button class="tab aa" data-ed="autohdr" onclick="switchEditor('autohdr')">AutoHDR</button>
+    <button class="tab" data-ed="kamel" onclick="switchEditor('kamel')">Kamel</button>
+  </div>
+  <div class="menu-right">
+    <button class="theme-btn" onclick="toggleTheme()">◑</button>
+  </div>
+</nav>
+
+<main class="main">
+
+  <div class="stats-wrap">
+    <div class="stats-bar" id="sBar" onclick="toggleStats()">
+      <span class="stats-bar-title">Editor Comparison</span>
+      <span class="chevron" id="sChev">▼</span>
+    </div>
+    <div class="stats-body" id="sBody">
+      <div class="stats-inner">
+
+        <!-- Volume + Billing -->
+        <div class="billing-row">
+          <div class="vol-input-wrap">
+            <button class="vol-btn" onclick="stepVol(-500)">−</button>
+            <input id="volInput" class="vol-input" type="number" value="5000" min="1" step="100" oninput="updateCalc()">
+            <button class="vol-btn" onclick="stepVol(500)">+</button>
+          </div>
+          <div class="vol-label">images / month</div>
+          <div class="billing-tabs">
+            <button class="billing-tab billing-active" data-period="monthly" onclick="setBilling('monthly')">Monthly</button>
+            <button class="billing-tab" data-period="annually" onclick="setBilling('annually')">Annual <span style="font-size:.55rem;opacity:.7;">— save 4¢</span></button>
+          </div>
+        </div>
+
+        <!-- Money Cards -->
+        <div class="money-row">
+          <div class="money-card">
+            <div class="mc-label">Turnaround</div>
+            <div class="money-bars">
+              <div class="money-bar-row"><div class="mb-name kamel">Kamel</div><div class="mb-track"><div class="mb-fill kamel" style="width:100%"></div></div><div class="mb-val">12–24h</div></div>
+              <div class="money-bar-row"><div class="mb-name autohdr">AutoHDR</div><div class="mb-track"><div class="mb-fill autohdr" style="width:14%"></div></div><div class="mb-val">20 min</div></div>
+            </div>
+          </div>
+          <div class="money-card">
+            <div class="mc-label">Cost / Image</div>
+            <div class="money-bars">
+              <div class="money-bar-row"><div class="mb-name kamel">Kamel</div><div class="mb-track"><div id="barRateK" class="mb-fill kamel" style="width:100%"></div></div><div class="mb-val" id="rateKamel">$0.75</div></div>
+              <div class="money-bar-row"><div class="mb-name autohdr">AutoHDR</div><div class="mb-track"><div id="barRateA" class="mb-fill autohdr" style="width:60%"></div></div><div class="mb-val" id="rateAuto">$0.45</div></div>
+            </div>
+          </div>
+          <div class="money-card">
+            <div class="mc-label">Est. Monthly</div>
+            <div class="money-bars">
+              <div class="money-bar-row"><div class="mb-name kamel">Kamel</div><div class="mb-track"><div id="barKamelM" class="mb-fill kamel" style="width:100%"></div></div><div class="mb-val" id="valKamelM">$3,750</div></div>
+              <div class="money-bar-row"><div class="mb-name autohdr">AutoHDR</div><div class="mb-track"><div id="barAutoM" class="mb-fill autohdr" style="width:60%"></div></div><div class="mb-val" id="valAutoM">$2,250</div></div>
+            </div>
+          </div>
+          <div class="money-card">
+            <div class="mc-label">Est. Annual</div>
+            <div class="money-bars">
+              <div class="money-bar-row"><div class="mb-name kamel">Kamel</div><div class="mb-track"><div id="barKamelY" class="mb-fill kamel" style="width:100%"></div></div><div class="mb-val" id="valKamelY">$45,000</div></div>
+              <div class="money-bar-row"><div class="mb-name autohdr">AutoHDR</div><div class="mb-track"><div id="barAutoY" class="mb-fill autohdr" style="width:60%"></div></div><div class="mb-val" id="valAutoY">$27,000</div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Ratings -->
+        <div class="ratings-section">
+          <div class="ratings-label">Quality Ratings</div>
+          <div id="ratingsContainer"></div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- IMAGES -->
+  <div class="img-controls">
+    <div class="img-counter" id="imgCounter">12 pairs — AutoHDR</div>
+    <div style="display:flex;align-items:center;gap:10px;">
+      <span class="editor-label el-autohdr" id="edLabel">AutoHDR</span>
+      <div style="display:flex;gap:8px;">
+        <button class="nav-btn" onclick="switchToOther(-1)">←</button>
+        <button class="nav-btn" onclick="switchToOther(1)">→</button>
+      </div>
+    </div>
+  </div>
+  <div class="image-grid" id="imgGrid"></div>
+  <div class="dots" id="dotsRow"></div>
+
+</main>
+
+<script>
+const PAIRS = [
+  ['7106 E Shields Dr_Nampa (1).jpg',  '7106 E Shields Dr_Nampa (3).jpg'],
+  ['7106 E Shields Dr_Nampa (4).jpg',  '7106 E Shields Dr_Nampa (6).jpg'],
+  ['7106 E Shields Dr_Nampa (7).jpg',  '7106 E Shields Dr_Nampa (9).jpg'],
+  ['7106 E Shields Dr_Nampa (10).jpg', '7106 E Shields Dr_Nampa (12).jpg'],
+  ['7106 E Shields Dr_Nampa (22).jpg', '7106 E Shields Dr_Nampa (24).jpg'],
+  ['7106 E Shields Dr_Nampa (25).jpg', '7106 E Shields Dr_Nampa (27).jpg'],
+  ['7106 E Shields Dr_Nampa (31).jpg', '7106 E Shields Dr_Nampa (33).jpg'],
+  ['7106 E Shields Dr_Nampa (37).jpg', '7106 E Shields Dr_Nampa (39).jpg'],
+  ['7106 E Shields Dr_Nampa (40).jpg', '7106 E Shields Dr_Nampa (42).jpg'],
+  ['7106 E Shields Dr_Nampa (43).jpg', '7106 E Shields Dr_Nampa (45).jpg'],
+  ['7106 E Shields Dr_Nampa (76).jpg', '7106 E Shields Dr_Nampa (78).jpg'],
+  ['7106 E Shields Dr_Nampa (70).jpg', '7106 E Shields Dr_Nampa (72).jpg'],
+];
+
+const PATHS = { autohdr:'AUTOHDR_web/', kamel:'Editors_web/' };
+
+const EDITORS = {
+  autohdr: {
+    label:'AutoHDR', color:'autohdr',
+    ratings:{ 'Interiors':'best','Exteriors':'better','Window Pulls':'best','Straightening':'better','Communication':'good','Completion':'better','Detail Oriented':'good','Price':'best' }
+  },
+  kamel: {
+    label:'Kamel', color:'kamel',
+    ratings:{ 'Interiors':'better','Exteriors':'good','Window Pulls':'good','Straightening':'good','Communication':'bad','Completion':'good','Detail Oriented':'good','Price':'better' }
+  }
+};
+
+const SCALE  = ['bad','good','better','best'];
+const COLORS = { bad:'#e05252', good:'#d4a84b', better:'#c8c060', best:'#8ab870' };
+
+const RATE = {
+  monthly:  { kamel:0.75, autohdr:0.45 },
+  annually: { kamel:0.75, autohdr:0.41 }
+};
+
+let currentEditor  = 'autohdr';
+let billingPeriod  = 'monthly';
+const imgCache     = { kamel:{}, autohdr:{} };
+
+// ── CALC ─────────────────────────────────────────────────
+function fmt(n){ return '$' + n.toLocaleString('en-US',{maximumFractionDigits:0}); }
+
+function updateCalc() {
+  const vol = Math.max(1, parseInt(document.getElementById('volInput').value) || 5000);
+  const r   = RATE[billingPeriod];
+  const km  = vol * r.kamel;
+  const am  = vol * r.autohdr;
+  const ky  = km * 12;
+  const ay  = am * 12;
+  const maxM = Math.max(km, am);
+  const maxY = Math.max(ky, ay);
+  const maxR = Math.max(r.kamel, r.autohdr);
+
+  document.getElementById('rateKamel').textContent = '$' + r.kamel.toFixed(2);
+  document.getElementById('rateAuto').textContent  = '$' + r.autohdr.toFixed(2);
+  document.getElementById('barRateK').style.width  = (r.kamel / maxR * 100) + '%';
+  document.getElementById('barRateA').style.width  = (r.autohdr / maxR * 100) + '%';
+
+  document.getElementById('valKamelM').textContent = fmt(km);
+  document.getElementById('valAutoM').textContent  = fmt(am);
+  document.getElementById('valKamelY').textContent = fmt(ky);
+  document.getElementById('valAutoY').textContent  = fmt(ay);
+
+  document.getElementById('barKamelM').style.width = (km/maxM*100) + '%';
+  document.getElementById('barAutoM').style.width  = (am/maxM*100) + '%';
+  document.getElementById('barKamelY').style.width = (ky/maxY*100) + '%';
+  document.getElementById('barAutoY').style.width  = (ay/maxY*100) + '%';
+}
+
+function stepVol(delta) {
+  const inp = document.getElementById('volInput');
+  inp.value = Math.max(1, (parseInt(inp.value) || 5000) + delta);
+  updateCalc();
+}
+
+function setBilling(period) {
+  billingPeriod = period;
+  document.querySelectorAll('.billing-tab').forEach(t => {
+    t.classList.toggle('billing-active', t.dataset.period === period);
+  });
+  updateCalc();
+}
+
+// ── GRID ─────────────────────────────────────────────────
+function preload(ed) {
+  const fileIdx = ed === 'kamel' ? 1 : 0;
+  PAIRS.forEach(pair => {
+    const src = PATHS[ed] + pair[fileIdx];
+    if(!imgCache[ed][src]) {
+      const i = new Image(); i.decoding = 'async'; i.src = src;
+      imgCache[ed][src] = i;
+    }
+  });
+}
+
+function buildGrid() {
+  const grid = document.getElementById('imgGrid');
+  grid.innerHTML = '';
+  const ed      = currentEditor;
+  const fileIdx = ed === 'kamel' ? 1 : 0;
+
+  PAIRS.forEach((pair, i) => {
+    const card = document.createElement('div');
+    card.className = 'img-card loading b' + ed[0];
+
+    const src    = PATHS[ed] + pair[fileIdx];
+    const cached = imgCache[ed][src];
+    const img    = document.createElement('img');
+    img.decoding = 'async';
+    img.loading  = 'lazy';
+    img.alt      = `Photo ${i+1}`;
+    img.src      = src;
+
+    const badge = document.createElement('div');
+    badge.className = 'img-badge ib-' + ed[0];
+    badge.textContent = EDITORS[ed].label;
+
+    const num = document.createElement('div');
+    num.className = 'img-num';
+    num.textContent = String(i+1).padStart(2,'0');
+
+    if(cached && cached.complete && cached.naturalWidth > 0) {
+      card.classList.remove('loading');
+    } else {
+      img.onload  = () => card.classList.remove('loading');
+      img.onerror = () => {
+        card.classList.remove('loading');
+        card.innerHTML = `<div class="img-ph"><div class="ph-ico">⚠</div><div class="ph-txt">${pair[fileIdx]}</div></div>`;
+        card.appendChild(badge); card.appendChild(num);
+      };
+      imgCache[ed][src] = img;
+    }
+
+    card.appendChild(img);
+    card.appendChild(badge);
+    card.appendChild(num);
+    grid.appendChild(card);
+  });
+
+  const other = ed === 'kamel' ? 'autohdr' : 'kamel';
+  setTimeout(() => preload(other), 400);
+}
+
+// ── EDITOR SWITCH ─────────────────────────────────────────
+function switchEditor(ed, animate=true) {
+  currentEditor = ed;
+  document.querySelectorAll('.tab').forEach(t => {
+    t.className = 'tab';
+    if(t.dataset.ed === ed) t.classList.add('a' + ed[0]);
+  });
+  const el = document.getElementById('edLabel');
+  el.className = 'editor-label el-' + ed;
+  el.textContent = EDITORS[ed].label;
+  document.getElementById('imgCounter').textContent = `${PAIRS.length} pairs — ${EDITORS[ed].label}`;
+  buildGrid();
+  positionSliders(ed, animate);
+  updateDots();
+}
+
+function switchToOther(dir) {
+  const keys = Object.keys(EDITORS);
+  switchEditor(keys[(keys.indexOf(currentEditor) + dir + keys.length) % keys.length], true);
+}
+
+// ── RATINGS ──────────────────────────────────────────────
+function buildRatings() {
+  const container = document.getElementById('ratingsContainer');
+  container.innerHTML = '';
+  Object.keys(EDITORS.kamel.ratings).forEach(m => {
+    const key = m.replace(/\s/g,'_');
+    const row = document.createElement('div');
+    row.className = 'rating-row';
+
+    const label = document.createElement('div');
+    label.className = 'rr-metric';
+    label.textContent = m;
+    row.appendChild(label);
+
+    const track = document.createElement('div');
+    track.className = 'pill-track';
+    track.id = 'pt_' + key;
+
+    const slider = document.createElement('div');
+    slider.className = 'pill-slider';
+    slider.id = 'ps_' + key;
+    slider.style.cssText = 'left:3px;width:0;opacity:0;transition:none;';
+    track.appendChild(slider);
+
+    SCALE.forEach(s => {
+      const opt = document.createElement('div');
+      opt.className = 'pill-opt';
+      opt.id = 'po_' + key + '_' + s;
+      opt.textContent = s;
+      track.appendChild(opt);
+    });
+
+    row.appendChild(track);
+    container.appendChild(row);
+  });
+}
+
+function positionSliders(ed, animate) {
+  Object.keys(EDITORS[ed].ratings).forEach(m => {
+    const key    = m.replace(/\s/g,'_');
+    const rating = EDITORS[ed].ratings[m];
+    const slider = document.getElementById('ps_' + key);
+    const track  = document.getElementById('pt_' + key);
+    if(!slider || !track) return;
+
+    SCALE.forEach(s => {
+      const o = document.getElementById('po_' + key + '_' + s);
+      if(o){ o.classList.toggle('active', s===rating); o.style.color = s===rating ? '#0a0a0a' : ''; }
+    });
+
+    if(!rating){ slider.style.opacity='0'; return; }
+    const activeOpt = document.getElementById('po_' + key + '_' + rating);
+    if(!activeOpt) return;
+    const tR = track.getBoundingClientRect();
+    const oR = activeOpt.getBoundingClientRect();
+
+    if(!animate) {
+      slider.style.transition = 'none';
+      slider.style.left = (oR.left - tR.left) + 'px';
+      slider.style.width = oR.width + 'px';
+      slider.style.background = COLORS[rating];
+      slider.style.opacity = '1';
+      slider.getBoundingClientRect();
+      slider.style.transition = '';
+    } else {
+      slider.style.transition = '';
+      slider.style.left = (oR.left - tR.left) + 'px';
+      slider.style.width = oR.width + 'px';
+      slider.style.background = COLORS[rating];
+      slider.style.opacity = '1';
+    }
+  });
+}
+
+// ── DOTS ─────────────────────────────────────────────────
+function updateDots() {
+  const c = document.getElementById('dotsRow');
+  c.innerHTML = '';
+  Object.keys(EDITORS).forEach(ed => {
+    const d = document.createElement('div');
+    d.className = 'dot' + (ed===currentEditor?' on':'');
+    d.onclick = () => switchEditor(ed, true);
+    c.appendChild(d);
+  });
+}
+
+// ── STATS ────────────────────────────────────────────────
+function toggleStats() {
+  document.getElementById('sBody').classList.toggle('open');
+  document.getElementById('sChev').classList.toggle('open');
+  document.getElementById('sBar').classList.toggle('open');
+}
+
+// ── THEME ────────────────────────────────────────────────
+function toggleTheme() {
+  document.body.classList.toggle('light');
+  requestAnimationFrame(() => positionSliders(currentEditor, false));
+}
+
+// ── KEYBOARD ─────────────────────────────────────────────
+document.addEventListener('keydown', e => {
+  if(e.key === 'ArrowLeft')  switchToOther(-1);
+  if(e.key === 'ArrowRight') switchToOther(1);
+});
+
+// ── SWIPE ────────────────────────────────────────────────
+let swipeX = null;
+let trackpadAccX = 0, trackpadTimer = null;
+
+document.addEventListener('touchstart', e => { swipeX = e.touches[0].clientX; }, {passive:true});
+document.addEventListener('touchend', e => {
+  if(swipeX === null) return;
+  const dx = e.changedTouches[0].clientX - swipeX;
+  if(Math.abs(dx) > 50) switchToOther(dx < 0 ? 1 : -1);
+  swipeX = null;
+}, {passive:true});
+
+document.addEventListener('wheel', e => {
+  if(Math.abs(e.deltaX) < Math.abs(e.deltaY)) return;
+  e.preventDefault();
+  trackpadAccX += e.deltaX;
+  clearTimeout(trackpadTimer);
+  trackpadTimer = setTimeout(() => {
+    if(Math.abs(trackpadAccX) > 60) switchToOther(trackpadAccX > 0 ? 1 : -1);
+    trackpadAccX = 0;
+  }, 80);
+}, {passive:false});
+
+// ── INIT ─────────────────────────────────────────────────
+buildRatings();
+buildGrid();
+updateDots();
+updateCalc();
+requestAnimationFrame(() => requestAnimationFrame(() => positionSliders(currentEditor, false)));
+window.addEventListener('resize', () => positionSliders(currentEditor, false));
+</script>
+</body>
+</html

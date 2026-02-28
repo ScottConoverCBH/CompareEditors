@@ -1,0 +1,6 @@
+# Ignore original full-size images
+AUTOHDR/
+Editors/
+
+# Mac junk
+.DS_Store
