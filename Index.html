@@ -376,6 +376,9 @@ function switchEditor(ed, animate=true) {
     t.className = 'tab';
     if(t.dataset.ed === ed) t.classList.add('a' + ed[0]);
   });
+  buildGrid();
+  positionSliders(ed, animate);
+  updateDots();
   document.getElementById('imgCounter').textContent = '';
   buildGrid();
   positionSliders(ed, animate);
