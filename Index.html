@@ -29,8 +29,13 @@ body{background:var(--bg);color:var(--text);font-family:'Georgia',serif;min-heig
 }
 .light .menu{background:rgba(240,237,232,0.88);}
 @media(max-width:680px){
-  .menu{top:auto;bottom:0;border-bottom:none;border-top:1px solid var(--border);}
+  .menu{top:auto;bottom:0;border-bottom:none;border-top:1px solid var(--border);padding:0 14px;flex-direction:row;}
   .main{padding-top:28px !important;padding-bottom:calc(var(--menu-h) + 28px);}
+  .menu-brand{display:none;}
+  .menu-left{flex-direction:row;align-items:center;gap:10px;order:1;}
+  .property-wrap{order:3;margin-left:auto;}
+  .editor-tabs{order:1;}
+  .menu-right{order:4;}
 }
 .menu-left{display:flex;flex-direction:column;}
 .menu-brand{font-style:italic;font-size:1.05rem;color:var(--text-dim);letter-spacing:.02em;white-space:nowrap;}
@@ -119,6 +124,9 @@ body{background:var(--bg);color:var(--text);font-family:'Georgia',serif;min-heig
   background:var(--surface); border:1px solid var(--border);
   border-radius:var(--radius); overflow:hidden; min-width:220px;
   z-index:300; box-shadow:0 8px 32px rgba(0,0,0,.4);
+}
+@media(max-width:680px){
+  .property-dropdown{top:auto;bottom:calc(100% + 8px);left:auto;right:0;}
 }
 .property-dropdown.open { display:block; }
 .pd-item {
@@ -294,7 +302,7 @@ const PROPERTIES = [
       ['7106 E Shields Dr_Nampa (10).jpg', '7106 E Shields Dr_Nampa (12).jpg'],
       ['7106 E Shields Dr_Nampa (22).jpg', '7106 E Shields Dr_Nampa (24).jpg'],
       ['7106 E Shields Dr_Nampa (25).jpg', '7106 E Shields Dr_Nampa (27).jpg'],
-      ['7106 E Shields Dr_Nampa (31).jpg', '7106 E Shields Dr_Nampa (33).jpg'],
+      ['7106 E Shields Dr_Nampa (33).jpg', '7106 E Shields Dr_Nampa (31).jpg'],
       ['7106 E Shields Dr_Nampa (37).jpg', '7106 E Shields Dr_Nampa (39).jpg'],
       ['7106 E Shields Dr_Nampa (40).jpg', '7106 E Shields Dr_Nampa (42).jpg'],
       ['7106 E Shields Dr_Nampa (43).jpg', '7106 E Shields Dr_Nampa (45).jpg'],
@@ -419,6 +427,11 @@ function buildGrid() {
     num.className = 'img-num';
     num.textContent = String(i+1).padStart(2,'0');
     card.appendChild(num);
+
+    // Tap to switch editor on mobile
+    card.addEventListener('click', () => {
+      if(window.innerWidth <= 680) switchToOther(1);
+    });
 
     grid.appendChild(card);
   });
@@ -599,15 +612,8 @@ document.addEventListener('keydown', e => {
   if(e.key === 'ArrowUp')    { e.preventDefault(); scrollToCard(currentCardIndex - cols); }
 });
 
-// ── SWIPE (touch + trackpad) ──────────────────────────────
-let swipeX = null, trackpadAccX = 0, trackpadTimer = null;
-document.addEventListener('touchstart', e=>{ swipeX=e.touches[0].clientX; },{passive:true});
-document.addEventListener('touchend', e=>{
-  if(swipeX===null) return;
-  const dx = e.changedTouches[0].clientX - swipeX;
-  if(Math.abs(dx)>50) switchToOther(dx<0?1:-1);
-  swipeX=null;
-},{passive:true});
+// ── SWIPE (trackpad only — touch uses tap on image) ──────
+let trackpadAccX = 0, trackpadTimer = null;
 document.addEventListener('wheel', e=>{
   if(Math.abs(e.deltaX)<Math.abs(e.deltaY)) return;
   e.preventDefault();
