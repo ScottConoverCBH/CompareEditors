@@ -171,9 +171,11 @@ body{background:var(--bg);color:var(--text);font-family:'Georgia',serif;min-heig
 #imgGrid.show-kamel   .img-card { border-color:var(--kamel); }
 #imgGrid.show-autohdr .img-card { border-color:var(--autohdr); }
 
-.img-badge{position:absolute;bottom:10px;left:10px;padding:4px 10px;border-radius:50px;font-family:'Courier New',monospace;font-size:.58rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;backdrop-filter:blur(12px);z-index:10;transition:all .18s;}
-#imgGrid.show-kamel   .img-badge { background:rgba(240,217,140,.18);color:var(--kamel);border:1px solid rgba(240,217,140,.25); }
-#imgGrid.show-autohdr .img-badge { background:rgba(126,184,232,.18);color:var(--autohdr);border:1px solid rgba(126,184,232,.25); }
+.img-badge { position:absolute;bottom:10px;left:10px;padding:4px 10px;border-radius:50px;font-family:'Courier New',monospace;font-size:.58rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;backdrop-filter:blur(12px);z-index:10; }
+.img-badge.kamel   { background:rgba(240,217,140,.18);color:var(--kamel);border:1px solid rgba(240,217,140,.25); display:none; }
+.img-badge.autohdr { background:rgba(126,184,232,.18);color:var(--autohdr);border:1px solid rgba(126,184,232,.25); display:none; }
+#imgGrid.show-kamel   .img-badge.kamel   { display:block; }
+#imgGrid.show-autohdr .img-badge.autohdr { display:block; }
 
 .img-num{position:absolute;top:10px;right:10px;background:rgba(0,0,0,.5);backdrop-filter:blur(8px);color:var(--text-dim);font-family:'Courier New',monospace;font-size:.56rem;letter-spacing:.1em;padding:3px 8px;border-radius:50px;z-index:10;}
 
@@ -418,10 +420,15 @@ function buildGrid() {
     stack.appendChild(imgK);
     card.appendChild(stack);
 
-    const badge = document.createElement('div');
-    badge.className = 'img-badge';
-    badge.textContent = EDITORS[currentEditor].label;
-    card.appendChild(badge);
+    const badgeA = document.createElement('div');
+    badgeA.className = 'img-badge autohdr';
+    badgeA.textContent = EDITORS.autohdr.label;
+    card.appendChild(badgeA);
+
+    const badgeK = document.createElement('div');
+    badgeK.className = 'img-badge kamel';
+    badgeK.textContent = EDITORS.kamel.label;
+    card.appendChild(badgeK);
 
     const num = document.createElement('div');
     num.className = 'img-num';
