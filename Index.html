@@ -155,7 +155,6 @@ body{background:var(--bg);color:var(--text);font-family:'Georgia',serif;min-heig
 .image-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px;}
 @media(max-width:680px){.image-grid{grid-template-columns:1fr;}}
 
-/* The key CSS: both images stacked, class on grid toggles which is visible */
 .img-stack{position:absolute;inset:0;}
 .img-stack img{
   position:absolute;inset:0;
@@ -203,12 +202,8 @@ body{background:var(--bg);color:var(--text);font-family:'Georgia',serif;min-heig
         <div class="pd-sub">Nampa, ID — 12 pairs</div>
       </div>
       <div class="pd-item" data-prop="1" onclick="selectProperty(1)">
-        <div class="pd-label">Property 2</div>
-        <div class="pd-sub">Address TBD — placeholder</div>
-      </div>
-      <div class="pd-item" data-prop="2" onclick="selectProperty(2)">
-        <div class="pd-label">Property 3</div>
-        <div class="pd-sub">Address TBD — placeholder</div>
+        <div class="pd-label">2389 N Silver Wolf Ave</div>
+        <div class="pd-sub">Nampa, ID — 39 pairs</div>
       </div>
     </div>
   </div>
@@ -266,7 +261,7 @@ body{background:var(--bg);color:var(--text);font-family:'Georgia',serif;min-heig
               <div class="money-bar-row"><div class="mb-name autohdr">AutoHDR</div><div class="mb-track"><div id="barAutoM" class="mb-fill autohdr" style="width:60%"></div></div><div class="mb-val" id="valAutoM">$2,250</div></div>
             </div>
           </div>
-        <div class="money-card" onclick="unlockRatings()" style="cursor:pointer;">
+          <div class="money-card" onclick="unlockRatings()" style="cursor:pointer;">
             <div class="mc-label">Est. Annual</div>
             <div class="money-bars">
               <div class="money-bar-row"><div class="mb-name kamel">Kamel</div><div class="mb-track"><div id="barKamelY" class="mb-fill kamel" style="width:100%"></div></div><div class="mb-val" id="valKamelY">$45,000</div></div>
@@ -313,14 +308,49 @@ const PROPERTIES = [
     ]
   },
   {
-    label: 'Property 2',
-    sub: 'Address TBD',
-    pairs: [] // add pairs here when ready
-  },
-  {
-    label: 'Property 3',
-    sub: 'Address TBD',
-    pairs: [] // add pairs here when ready
+    label: '2389 N Silver Wolf Ave',
+    sub: 'Nampa, ID',
+    pairs: [
+      ['2026-assets-images-cbhhomes-subdivision-floorplan-1.jpg',  '2389 N Silver Wolf Ave (1).jpg'],
+      ['2026-assets-images-cbhhomes-subdivision-floorplan-2.jpg',  '2389 N Silver Wolf Ave (2).jpg'],
+      ['2026-assets-images-cbhhomes-subdivision-floorplan-3.jpg',  '2389 N Silver Wolf Ave (3).jpg'],
+      ['2026-assets-images-cbhhomes-subdivision-floorplan-4.jpg',  '2389 N Silver Wolf Ave (4).jpg'],
+      ['2026-assets-images-cbhhomes-subdivision-floorplan-5.jpg',  '2389 N Silver Wolf Ave (5).jpg'],
+      ['2026-assets-images-cbhhomes-subdivision-floorplan-6.jpg',  '2389 N Silver Wolf Ave (6).jpg'],
+      ['2026-assets-images-cbhhomes-subdivision-floorplan-7.jpg',  '2389 N Silver Wolf Ave (7).jpg'],
+      ['2026-assets-images-cbhhomes-subdivision-floorplan-8.jpg',  '2389 N Silver Wolf Ave (8).jpg'],
+      ['2026-assets-images-cbhhomes-subdivision-floorplan-9.jpg',  '2389 N Silver Wolf Ave (9).jpg'],
+      ['2026-assets-images-cbhhomes-subdivision-floorplan-10.jpg', '2389 N Silver Wolf Ave (10).jpg'],
+      ['2026-assets-images-cbhhomes-subdivision-floorplan-11.jpg', '2389 N Silver Wolf Ave (11).jpg'],
+      ['2026-assets-images-cbhhomes-subdivision-floorplan-12.jpg', '2389 N Silver Wolf Ave (12).jpg'],
+      ['2026-assets-images-cbhhomes-subdivision-floorplan-13.jpg', '2389 N Silver Wolf Ave (13).jpg'],
+      ['2026-assets-images-cbhhomes-subdivision-floorplan-14.jpg', '2389 N Silver Wolf Ave (14).jpg'],
+      ['2026-assets-images-cbhhomes-subdivision-floorplan-15.jpg', '2389 N Silver Wolf Ave (15).jpg'],
+      ['2026-assets-images-cbhhomes-subdivision-floorplan-16.jpg', '2389 N Silver Wolf Ave (16).jpg'],
+      ['2026-assets-images-cbhhomes-subdivision-floorplan-17.jpg', '2389 N Silver Wolf Ave (17).jpg'],
+      ['2026-assets-images-cbhhomes-subdivision-floorplan-18.jpg', '2389 N Silver Wolf Ave (18).jpg'],
+      ['2026-assets-images-cbhhomes-subdivision-floorplan-19.jpg', '2389 N Silver Wolf Ave (19).jpg'],
+      ['2026-assets-images-cbhhomes-subdivision-floorplan-20.jpg', '2389 N Silver Wolf Ave (20).jpg'],
+      ['2026-assets-images-cbhhomes-subdivision-floorplan-21.jpg', '2389 N Silver Wolf Ave (21).jpg'],
+      ['2026-assets-images-cbhhomes-subdivision-floorplan-22.jpg', '2389 N Silver Wolf Ave (22).jpg'],
+      ['2026-assets-images-cbhhomes-subdivision-floorplan-23.jpg', '2389 N Silver Wolf Ave (23).jpg'],
+      ['2026-assets-images-cbhhomes-subdivision-floorplan-24.jpg', '2389 N Silver Wolf Ave (24).jpg'],
+      ['2026-assets-images-cbhhomes-subdivision-floorplan-25.jpg', '2389 N Silver Wolf Ave (25).jpg'],
+      ['2026-assets-images-cbhhomes-subdivision-floorplan-26.jpg', '2389 N Silver Wolf Ave (26).jpg'],
+      ['2026-assets-images-cbhhomes-subdivision-floorplan-27.jpg', '2389 N Silver Wolf Ave (27).jpg'],
+      ['2026-assets-images-cbhhomes-subdivision-floorplan-28.jpg', '2389 N Silver Wolf Ave (28).jpg'],
+      ['2026-assets-images-cbhhomes-subdivision-floorplan-29.jpg', '2389 N Silver Wolf Ave (29).jpg'],
+      ['2026-assets-images-cbhhomes-subdivision-floorplan-30.jpg', '2389 N Silver Wolf Ave (30).jpg'],
+      ['2026-assets-images-cbhhomes-subdivision-floorplan-31.jpg', '2389 N Silver Wolf Ave (31).jpg'],
+      ['2026-assets-images-cbhhomes-subdivision-floorplan-32.jpg', '2389 N Silver Wolf Ave (32).jpg'],
+      ['2026-assets-images-cbhhomes-subdivision-floorplan-33.jpg', '2389 N Silver Wolf Ave (33).jpg'],
+      ['2026-assets-images-cbhhomes-subdivision-floorplan-34.jpg', '2389 N Silver Wolf Ave (34).jpg'],
+      ['2026-assets-images-cbhhomes-subdivision-floorplan-35.jpg', '2389 N Silver Wolf Ave (35).jpg'],
+      ['2026-assets-images-cbhhomes-subdivision-floorplan-36.jpg', '2389 N Silver Wolf Ave (36).jpg'],
+      ['2026-assets-images-cbhhomes-subdivision-floorplan-37.jpg', '2389 N Silver Wolf Ave (37).jpg'],
+      ['2026-assets-images-cbhhomes-subdivision-floorplan-38.jpg', '2389 N Silver Wolf Ave (38).jpg'],
+      ['2026-assets-images-cbhhomes-subdivision-floorplan-39.jpg', '2389 N Silver Wolf Ave (39).jpg'],
+    ]
   }
 ];
 
@@ -359,25 +389,20 @@ function selectProperty(idx) {
   currentProperty = idx;
   PAIRS = PROPERTIES[idx].pairs;
 
-  // Update button label
   document.getElementById('propBtnLabel').textContent = PROPERTIES[idx].label;
 
-  // Update active state in dropdown
   document.querySelectorAll('.pd-item').forEach(el => {
     el.classList.toggle('active', parseInt(el.dataset.prop) === idx);
   });
 
-  // Close dropdown
   document.getElementById('propBtn').classList.remove('open');
   document.getElementById('propDropdown').classList.remove('open');
 
-  // Rebuild grid for new property
   const grid = document.getElementById('imgGrid');
   grid.innerHTML = '';
   buildGrid();
 }
 
-// Close dropdown when clicking outside
 document.addEventListener('click', e => {
   const wrap = document.getElementById('propWrap');
   if(wrap && !wrap.contains(e.target)) {
@@ -435,7 +460,6 @@ function buildGrid() {
     num.textContent = String(i+1).padStart(2,'0');
     card.appendChild(num);
 
-    // Tap to switch editor on mobile
     card.addEventListener('click', () => {
       if(window.innerWidth <= 680) switchToOther(1);
     });
@@ -619,7 +643,7 @@ document.addEventListener('keydown', e => {
   if(e.key === 'ArrowUp')    { e.preventDefault(); scrollToCard(currentCardIndex - cols); }
 });
 
-// ── SWIPE (trackpad only — touch uses tap on image) ──────
+// ── SWIPE (trackpad only) ─────────────────────────────────
 let trackpadAccX = 0, trackpadTimer = null;
 document.addEventListener('wheel', e=>{
   if(Math.abs(e.deltaX)<Math.abs(e.deltaY)) return;
