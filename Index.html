@@ -8,7 +8,7 @@
 :root {
   --bg:#000; --surface:#0f0f0f; --surface2:#161618; --border:#222224;
   --text:#e8e6e0; --text-muted:#5a5a60; --text-dim:#8a8a90;
-  --kamel:#f0d98c; --autohdr:#7eb8e8;
+  --kamel:#f0d98c; --autohdr:#7eb8e8; --scott:#b89ff0;
   --r-bad:#e05252; --r-good:#d4a84b; --r-better:#c8c060; --r-best:#8ab870;
   --menu-h:68px; --radius:10px;
 }
@@ -45,6 +45,9 @@ body{background:var(--bg);color:var(--text);font-family:'Georgia',serif;min-heig
 .tab:hover{color:var(--text);}
 .tab.ak{background:var(--kamel);color:#1a1a0a;}
 .tab.aa{background:var(--autohdr);color:#0a1520;}
+.tab.as{background:var(--scott);color:#0a0a1a;}
+.secret-tab{max-width:0;overflow:hidden;opacity:0;padding:0;transition:max-width .4s cubic-bezier(.4,0,.2,1),opacity .3s ease,padding .4s cubic-bezier(.4,0,.2,1);}
+.secret-tab.unlocked{max-width:120px;opacity:1;padding:7px 18px;}
 .menu-right{display:flex;align-items:center;gap:10px;}
 .theme-btn{background:transparent;border:1px solid var(--border);border-radius:50px;padding:6px 13px;color:var(--text-dim);font-family:'Courier New',monospace;font-size:.68rem;letter-spacing:.08em;cursor:pointer;transition:all .2s;}
 .theme-btn:hover{border-color:var(--text-dim);color:var(--text);}
@@ -165,16 +168,20 @@ body{background:var(--bg);color:var(--text);font-family:'Georgia',serif;min-heig
 }
 #imgGrid.show-autohdr .img-stack img.autohdr { opacity:1; z-index:2; }
 #imgGrid.show-kamel   .img-stack img.kamel   { opacity:1; z-index:2; }
+#imgGrid.show-scott   .img-stack img.scott   { opacity:1; z-index:2; }
 
 .img-card{position:relative;overflow:hidden;aspect-ratio:4/3;background:var(--surface2);border:1px solid var(--border);transition:border-color .3s;}
 #imgGrid.show-kamel   .img-card { border-color:var(--kamel); }
 #imgGrid.show-autohdr .img-card { border-color:var(--autohdr); }
+#imgGrid.show-scott   .img-card { border-color:var(--scott); }
 
 .img-badge { position:absolute;bottom:10px;left:10px;padding:4px 10px;border-radius:50px;font-family:'Courier New',monospace;font-size:.58rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;backdrop-filter:blur(12px);z-index:10; }
 .img-badge.kamel   { background:rgba(240,217,140,.18);color:var(--kamel);border:1px solid rgba(240,217,140,.25); display:none; }
 .img-badge.autohdr { background:rgba(126,184,232,.18);color:var(--autohdr);border:1px solid rgba(126,184,232,.25); display:none; }
+.img-badge.scott   { background:rgba(184,159,240,.18);color:var(--scott);border:1px solid rgba(184,159,240,.25); display:none; }
 #imgGrid.show-kamel   .img-badge.kamel   { display:block; }
 #imgGrid.show-autohdr .img-badge.autohdr { display:block; }
+#imgGrid.show-scott   .img-badge.scott   { display:block; }
 
 .img-num{position:absolute;top:10px;right:10px;background:rgba(0,0,0,.5);backdrop-filter:blur(8px);color:var(--text-dim);font-family:'Courier New',monospace;font-size:.56rem;letter-spacing:.1em;padding:3px 8px;border-radius:50px;z-index:10;}
 
@@ -211,6 +218,7 @@ body{background:var(--bg);color:var(--text);font-family:'Georgia',serif;min-heig
   <div class="editor-tabs">
     <button class="tab aa" data-ed="autohdr" onclick="switchEditor('autohdr')">AutoHDR</button>
     <button class="tab" data-ed="kamel" onclick="switchEditor('kamel')">Kamel</button>
+    <button class="tab secret-tab" id="scottTab" data-ed="scott" onclick="switchEditor('scott')">Scott</button>
   </div>
   <div class="menu-right">
     <button class="theme-btn" onclick="toggleTheme()">◑</button>
@@ -254,7 +262,7 @@ body{background:var(--bg);color:var(--text);font-family:'Georgia',serif;min-heig
               <div class="money-bar-row"><div class="mb-name autohdr">AutoHDR</div><div class="mb-track"><div id="barRateA" class="mb-fill autohdr" style="width:60%"></div></div><div class="mb-val" id="rateAuto">$0.45</div></div>
             </div>
           </div>
-          <div class="money-card">
+          <div class="money-card" onclick="unlockSecret()" style="cursor:pointer;">
             <div class="mc-label">Est. Monthly</div>
             <div class="money-bars">
               <div class="money-bar-row"><div class="mb-name kamel">Kamel</div><div class="mb-track"><div id="barKamelM" class="mb-fill kamel" style="width:100%"></div></div><div class="mb-val" id="valKamelM">$3,750</div></div>
@@ -357,7 +365,7 @@ const PROPERTIES = [
 let currentProperty = 0;
 let PAIRS = PROPERTIES[0].pairs;
 
-const PATHS = { autohdr:'AUTOHDR_web/', kamel:'Editors_web/' };
+const PATHS = { autohdr:'AUTOHDR_web/', kamel:'Editors_web/', scott:'Scott_web/' };
 
 const EDITORS = {
   autohdr: {
@@ -367,8 +375,29 @@ const EDITORS = {
   kamel: {
     label:'Kamel', color:'kamel',
     ratings:{ 'Interiors':'better','Exteriors':'good','Window Pulls':'good','Straightening':'good','Communication':'bad','Completion':'good','Detail Oriented':'good','Price':'better' }
+  },
+  scott: {
+    label:'Scott', color:'scott',
+    ratings:{ 'Interiors':'best','Exteriors':'best','Window Pulls':'better','Straightening':'best','Communication':'best','Completion':'best','Detail Oriented':'best','Price':'best' }
   }
 };
+
+let secretUnlocked = false;
+
+function unlockSecret() {
+  secretUnlocked = !secretUnlocked;
+  const tab = document.getElementById('scottTab');
+  tab.classList.toggle('unlocked', secretUnlocked);
+  if (!secretUnlocked && currentEditor === 'scott') {
+    switchEditor('autohdr', true);
+  }
+  // Rebuild ratings in case scott tab state changed
+  buildRatings();
+  setTimeout(() => positionSliders(currentEditor, false), 50);
+}
+
+// Override switchEditor to guard scott when locked
+const _origSwitchEditor = switchEditor;
 
 const SCALE  = ['bad','good','better','best'];
 const COLORS = { bad:'#e05252', good:'#d4a84b', better:'#c8c060', best:'#8ab870' };
@@ -441,6 +470,18 @@ function buildGrid() {
     imgK.alt = `Kamel ${i+1}`;
     imgK.decoding = 'auto';
 
+    const imgS = document.createElement('img');
+    imgS.className = 'scott';
+    imgS.src = PATHS.scott + pair[0].replace('AUTOHDR_web/','');
+    imgS.alt = `Scott ${i+1}`;
+    imgS.decoding = 'auto';
+    stack.appendChild(imgS);
+
+    const badgeS = document.createElement('div');
+    badgeS.className = 'img-badge scott';
+    badgeS.textContent = EDITORS.scott.label;
+    card.appendChild(badgeS);
+
     stack.appendChild(imgA);
     stack.appendChild(imgK);
     card.appendChild(stack);
@@ -470,20 +511,23 @@ function buildGrid() {
 
 // ── SWITCH ───────────────────────────────────────────────
 function switchEditor(ed, animate=true) {
+  if (ed === 'scott' && !secretUnlocked) return;
   currentEditor = ed;
   document.querySelectorAll('.tab').forEach(t => {
-    t.className = 'tab';
+    t.className = t.id === 'scottTab'
+      ? 'tab secret-tab' + (secretUnlocked ? ' unlocked' : '')
+      : 'tab';
     if(t.dataset.ed === ed) t.classList.add('a' + ed[0]);
   });
   const grid = document.getElementById('imgGrid');
-  grid.classList.toggle('show-autohdr', ed === 'autohdr');
-  grid.classList.toggle('show-kamel',   ed === 'kamel');
+  grid.classList.remove('show-autohdr','show-kamel','show-scott');
+  grid.classList.add('show-' + ed);
   positionSliders(ed, animate);
   updateDots();
 }
 
 function switchToOther(dir) {
-  const keys = Object.keys(EDITORS);
+  const keys = Object.keys(EDITORS).filter(k => k !== 'scott' || secretUnlocked);
   switchEditor(keys[(keys.indexOf(currentEditor) + dir + keys.length) % keys.length], true);
 }
 
@@ -596,7 +640,8 @@ function positionSliders(ed, animate) {
 // ── DOTS ─────────────────────────────────────────────────
 function updateDots() {
   const c = document.getElementById('dotsRow'); c.innerHTML='';
-  Object.keys(EDITORS).forEach(ed => {
+  const keys = Object.keys(EDITORS).filter(k => k !== 'scott' || secretUnlocked);
+  keys.forEach(ed => {
     const d = document.createElement('div');
     d.className = 'dot'+(ed===currentEditor?' on':'');
     d.onclick = () => switchEditor(ed,true);
