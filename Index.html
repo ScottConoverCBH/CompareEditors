@@ -181,6 +181,7 @@ body{background:var(--bg);color:var(--text);font-family:'Georgia',serif;min-heig
   pointer-events:none;
   transition:none;
 }
+#imgGrid.show-changes .img-overlay { opacity:1; z-index:3; }
 
 .img-card{position:relative;overflow:hidden;aspect-ratio:4/3;background:var(--surface2);border:1px solid var(--border);transition:border-color .3s;}
 #imgGrid.show-kamel   .img-card { border-color:var(--kamel); }
@@ -504,14 +505,14 @@ function buildGrid() {
     badgeC.textContent = EDITORS.changes.label;
     card.appendChild(badgeC);
 
-    // Overlay PNG for Changes mode — sits on top of Scott image
+    card.appendChild(stack);
+
+    // Overlay PNG for Changes mode — outside stack, controlled by CSS on grid
     const overlay = document.createElement('img');
     overlay.className = 'img-overlay';
     overlay.src = 'Overlays_web/overlay-' + String(i+1).padStart(2,'0') + '.png';
     overlay.alt = `Changes overlay ${i+1}`;
-    stack.appendChild(overlay);
-
-    card.appendChild(stack);
+    card.appendChild(overlay);
 
     const badgeA = document.createElement('div');
     badgeA.className = 'img-badge autohdr';
