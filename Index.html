@@ -409,7 +409,9 @@ function unlockSecret() {
   secretUnlocked = !secretUnlocked;
   document.getElementById('scottTab').classList.toggle('unlocked', secretUnlocked);
   document.getElementById('changesTab').classList.toggle('unlocked', secretUnlocked);
-  if (!secretUnlocked && (currentEditor === 'scott' || currentEditor === 'changes')) {
+  if (!secretUnlocked) {
+    // Always force back to autohdr when locking, regardless of current tab
+    currentEditor = 'autohdr';
     switchEditor('autohdr', true);
   }
   buildRatings();
