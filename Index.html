@@ -333,6 +333,8 @@ const PROPERTIES = [
   {
     label: '2389 N Silver Wolf Ave',
     sub: 'Nampa, ID',
+    overlayPath: 'Overlay/',
+    overlayPrefix: 'ScottOverlay',
     pairs: [
       ['2389 N Silver Wolf Ave (3).jpg',  '2026-assets-images-cbhhomes-subdivision-floorplan-1.jpg'],
       ['2389 N Silver Wolf Ave (4).jpg',  '2026-assets-images-cbhhomes-subdivision-floorplan-2.jpg'],
@@ -468,6 +470,9 @@ function buildGrid() {
 
   PAIRS.forEach((pair, i) => {
     const card = document.createElement('div');
+    const prop = PROPERTIES[currentProperty];
+    const overlayPath = prop.overlayPath || 'Overlay/';
+    const overlayPrefix = prop.overlayPrefix || 'ScottOverlay';
     card.className = 'img-card';
 
     const stack = document.createElement('div');
@@ -487,7 +492,7 @@ function buildGrid() {
 
     const imgS = document.createElement('img');
     imgS.className = 'scott';
-    imgS.src = PATHS.scott + pair[0].replace('AUTOHDR_web/','');
+    imgS.src = PATHS.scott + pair[0];
     imgS.alt = `Scott ${i+1}`;
     imgS.decoding = 'auto';
     stack.appendChild(imgS);
@@ -506,12 +511,15 @@ function buildGrid() {
 
     card.appendChild(stack);
 
-    // Overlay PNG for Changes mode — outside stack, controlled by CSS on grid
-    const overlay = document.createElement('img');
-    overlay.className = 'img-overlay';
-    overlay.src = 'Overlays_web/overlay-' + String(i+1).padStart(2,'0') + '.png';
-    overlay.alt = `Changes overlay ${i+1}`;
-    card.appendChild(overlay);
+    // Overlay PNG — only for properties that have overlays defined
+    if(prop.overlayPath) {
+      const overlay = document.createElement('img');
+      overlay.className = 'img-overlay';
+      overlay.src = overlayPath + overlayPrefix + (i+1) + '.png';
+      overlay.alt = `Changes overlay ${i+1}`;
+      overlay.style.display = 'none';
+      card.appendChild(overlay);
+    }
 
     const badgeA = document.createElement('div');
     badgeA.className = 'img-badge autohdr';
