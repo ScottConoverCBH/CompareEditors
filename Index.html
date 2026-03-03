@@ -571,10 +571,9 @@ function setBilling(period) {
 
 function unlockRatings() {
   const s = document.getElementById('ratingsSection');
-  if(s.style.display === 'none') {
-    s.style.display = 'block';
-    setTimeout(() => positionSliders(currentEditor, false), 50);
-  }
+  const isHidden = s.style.display === 'none';
+  s.style.display = isHidden ? 'block' : 'none';
+  if(isHidden) setTimeout(() => positionSliders(currentEditor, false), 50);
 }
 
 // ── RATINGS ──────────────────────────────────────────────
