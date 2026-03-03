@@ -8,7 +8,7 @@
 :root {
   --bg:#000; --surface:#0f0f0f; --surface2:#161618; --border:#222224;
   --text:#e8e6e0; --text-muted:#5a5a60; --text-dim:#8a8a90;
-  --kamel:#f0d98c; --autohdr:#7eb8e8; --scott:#b89ff0;
+  --kamel:#f0d98c; --autohdr:#7eb8e8; --scott:#b89ff0; --changes:#f0a8c0;
   --r-bad:#e05252; --r-good:#d4a84b; --r-better:#c8c060; --r-best:#8ab870;
   --menu-h:68px; --radius:10px;
 }
@@ -46,6 +46,7 @@ body{background:var(--bg);color:var(--text);font-family:'Georgia',serif;min-heig
 .tab.ak{background:var(--kamel);color:#1a1a0a;}
 .tab.aa{background:var(--autohdr);color:#0a1520;}
 .tab.as{background:var(--scott);color:#0a0a1a;}
+.tab.ac{background:var(--changes);color:#0a0a0a;}
 .secret-tab{max-width:0;overflow:hidden;opacity:0;padding:0;transition:max-width .4s cubic-bezier(.4,0,.2,1),opacity .3s ease,padding .4s cubic-bezier(.4,0,.2,1);}
 .secret-tab.unlocked{max-width:120px;opacity:1;padding:7px 18px;}
 .menu-right{display:flex;align-items:center;gap:10px;}
@@ -169,6 +170,17 @@ body{background:var(--bg);color:var(--text);font-family:'Georgia',serif;min-heig
 #imgGrid.show-autohdr .img-stack img.autohdr { opacity:1; z-index:2; }
 #imgGrid.show-kamel   .img-stack img.kamel   { opacity:1; z-index:2; }
 #imgGrid.show-scott   .img-stack img.scott   { opacity:1; z-index:2; }
+#imgGrid.show-changes .img-stack img.scott   { opacity:1; z-index:2; }
+#imgGrid.show-changes .img-overlay           { opacity:1; z-index:3; }
+
+.img-overlay {
+  position:absolute; inset:0;
+  width:100%; height:100%;
+  object-fit:cover;
+  opacity:0;
+  pointer-events:none;
+  transition:none;
+}
 
 .img-card{position:relative;overflow:hidden;aspect-ratio:4/3;background:var(--surface2);border:1px solid var(--border);transition:border-color .3s;}
 #imgGrid.show-kamel   .img-card { border-color:var(--kamel); }
@@ -179,9 +191,11 @@ body{background:var(--bg);color:var(--text);font-family:'Georgia',serif;min-heig
 .img-badge.kamel   { background:rgba(240,217,140,.18);color:var(--kamel);border:1px solid rgba(240,217,140,.25); display:none; }
 .img-badge.autohdr { background:rgba(126,184,232,.18);color:var(--autohdr);border:1px solid rgba(126,184,232,.25); display:none; }
 .img-badge.scott   { background:rgba(184,159,240,.18);color:var(--scott);border:1px solid rgba(184,159,240,.25); display:none; }
+.img-badge.changes { background:rgba(240,168,192,.18);color:var(--changes);border:1px solid rgba(240,168,192,.25); display:none; }
 #imgGrid.show-kamel   .img-badge.kamel   { display:block; }
 #imgGrid.show-autohdr .img-badge.autohdr { display:block; }
 #imgGrid.show-scott   .img-badge.scott   { display:block; }
+#imgGrid.show-changes .img-badge.changes { display:block; }
 
 .img-num{position:absolute;top:10px;right:10px;background:rgba(0,0,0,.5);backdrop-filter:blur(8px);color:var(--text-dim);font-family:'Courier New',monospace;font-size:.56rem;letter-spacing:.1em;padding:3px 8px;border-radius:50px;z-index:10;}
 
@@ -219,6 +233,7 @@ body{background:var(--bg);color:var(--text);font-family:'Georgia',serif;min-heig
     <button class="tab aa" data-ed="autohdr" onclick="switchEditor('autohdr')">AutoHDR</button>
     <button class="tab" data-ed="kamel" onclick="switchEditor('kamel')">Kamel</button>
     <button class="tab secret-tab" id="scottTab" data-ed="scott" onclick="switchEditor('scott')">Scott</button>
+    <button class="tab secret-tab" id="changesTab" data-ed="changes" onclick="switchEditor('changes')">Changes</button>
   </div>
   <div class="menu-right">
     <button class="theme-btn" onclick="toggleTheme()">◑</button>
@@ -365,7 +380,7 @@ const PROPERTIES = [
 let currentProperty = 0;
 let PAIRS = PROPERTIES[0].pairs;
 
-const PATHS = { autohdr:'AUTOHDR_web/', kamel:'Editors_web/', scott:'Scott_web/' };
+const PATHS = { autohdr:'AUTOHDR_web/', kamel:'Editors_web/', scott:'Scott_web/', changes:'Scott_web/' };
 
 const EDITORS = {
   autohdr: {
@@ -379,6 +394,10 @@ const EDITORS = {
   scott: {
     label:'Scott', color:'scott',
     ratings:{ 'Interiors':'best','Exteriors':'best','Window Pulls':'better','Straightening':'best','Communication':'best','Completion':'best','Detail Oriented':'best','Price':'best' }
+  },
+  changes: {
+    label:'Changes', color:'changes',
+    ratings:{ 'Interiors':'best','Exteriors':'best','Window Pulls':'best','Straightening':'best','Communication':'best','Completion':'best','Detail Oriented':'best','Price':'best' }
   }
 };
 
@@ -386,18 +405,14 @@ let secretUnlocked = false;
 
 function unlockSecret() {
   secretUnlocked = !secretUnlocked;
-  const tab = document.getElementById('scottTab');
-  tab.classList.toggle('unlocked', secretUnlocked);
-  if (!secretUnlocked && currentEditor === 'scott') {
+  document.getElementById('scottTab').classList.toggle('unlocked', secretUnlocked);
+  document.getElementById('changesTab').classList.toggle('unlocked', secretUnlocked);
+  if (!secretUnlocked && (currentEditor === 'scott' || currentEditor === 'changes')) {
     switchEditor('autohdr', true);
   }
-  // Rebuild ratings in case scott tab state changed
   buildRatings();
   setTimeout(() => positionSliders(currentEditor, false), 50);
 }
-
-// Override switchEditor to guard scott when locked
-const _origSwitchEditor = switchEditor;
 
 const SCALE  = ['bad','good','better','best'];
 const COLORS = { bad:'#e05252', good:'#d4a84b', better:'#c8c060', best:'#8ab870' };
@@ -484,6 +499,18 @@ function buildGrid() {
 
     stack.appendChild(imgA);
     stack.appendChild(imgK);
+    const badgeC = document.createElement('div');
+    badgeC.className = 'img-badge changes';
+    badgeC.textContent = EDITORS.changes.label;
+    card.appendChild(badgeC);
+
+    // Overlay PNG for Changes mode — sits on top of Scott image
+    const overlay = document.createElement('img');
+    overlay.className = 'img-overlay';
+    overlay.src = 'Overlays_web/overlay-' + String(i+1).padStart(2,'0') + '.png';
+    overlay.alt = `Changes overlay ${i+1}`;
+    stack.appendChild(overlay);
+
     card.appendChild(stack);
 
     const badgeA = document.createElement('div');
@@ -527,7 +554,7 @@ function switchEditor(ed, animate=true) {
 }
 
 function switchToOther(dir) {
-  const keys = Object.keys(EDITORS).filter(k => k !== 'scott' || secretUnlocked);
+  const keys = Object.keys(EDITORS).filter(k => !['scott','changes'].includes(k) || secretUnlocked);
   switchEditor(keys[(keys.indexOf(currentEditor) + dir + keys.length) % keys.length], true);
 }
 
