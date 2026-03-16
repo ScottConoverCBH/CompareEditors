@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Edit Compare — 7106 E Shields Dr</title>
+<title>Edit Compare</title>
 <style>
 :root {
   --bg:#000; --surface:#0f0f0f; --surface2:#161618; --border:#222224;
@@ -17,41 +17,53 @@
   --text:#18181a; --text-muted:#9a9a9f; --text-dim:#6a6a6f;
 }
 *{margin:0;padding:0;box-sizing:border-box;}
-html { background:#000; scroll-behavior: auto; }
+html{background:#000;scroll-behavior:auto;}
 body{background:var(--bg);color:var(--text);font-family:'Georgia',serif;min-height:100vh;transition:background .3s,color .3s;}
 
 /* MENU */
-.menu{
-  position:fixed;top:0;left:0;right:0;z-index:200;height:var(--menu-h);
-  display:flex;align-items:center;justify-content:space-between;padding:0 28px;
-  backdrop-filter:blur(24px) saturate(1.5);-webkit-backdrop-filter:blur(24px) saturate(1.5);
-  background:rgba(0,0,0,0.82);border-bottom:1px solid var(--border);
-}
+.menu{position:fixed;top:0;left:0;right:0;z-index:200;height:var(--menu-h);display:flex;align-items:center;justify-content:space-between;padding:0 28px;backdrop-filter:blur(24px) saturate(1.5);-webkit-backdrop-filter:blur(24px) saturate(1.5);background:rgba(0,0,0,0.82);border-bottom:1px solid var(--border);}
 .light .menu{background:rgba(240,237,232,0.88);}
 @media(max-width:680px){
-  .menu{top:auto;bottom:0;border-bottom:none;border-top:1px solid var(--border);padding:0 14px;flex-direction:row;}
+  .menu{top:auto;bottom:0;border-bottom:none;border-top:1px solid var(--border);padding:0 14px;}
   .main{padding-top:28px !important;padding-bottom:calc(var(--menu-h) + 28px);}
   .menu-brand{display:none;}
-  .menu-left{flex-direction:row;align-items:center;gap:10px;order:1;}
   .property-wrap{order:3;margin-left:auto;}
   .editor-tabs{order:1;}
   .menu-right{order:4;}
 }
 .menu-left{display:flex;flex-direction:column;}
 .menu-brand{font-style:italic;font-size:1.05rem;color:var(--text-dim);letter-spacing:.02em;white-space:nowrap;}
-.menu-address{font-family:'Courier New',monospace;font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);margin-top:2px;}
-.editor-tabs{display:flex;background:rgba(255,255,255,.05);border:1px solid var(--border);border-radius:50px;padding:4px;gap:3px;}
-.tab{padding:7px 18px;border-radius:50px;font-family:'Courier New',monospace;font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;color:var(--text-muted);border:none;background:transparent;transition:all .25s;}
+.editor-tabs{display:flex;background:rgba(255,255,255,.05);border:1px solid var(--border);border-radius:50px;padding:4px;gap:3px;overflow:hidden;}
+.tab{padding:7px 18px;border-radius:50px;font-family:'Courier New',monospace;font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;color:var(--text-muted);border:none;background:transparent;transition:all .25s;white-space:nowrap;}
 .tab:hover{color:var(--text);}
-.tab.ak{background:var(--kamel);color:#1a1a0a;}
-.tab.aa{background:var(--autohdr);color:#0a1520;}
-.tab.as{background:var(--scott);color:#0a0a1a;}
-.tab.ac{background:var(--changes);color:#0a0a0a;}
-.secret-tab{max-width:0;overflow:hidden;opacity:0;padding:0;transition:max-width .4s cubic-bezier(.4,0,.2,1),opacity .3s ease,padding .4s cubic-bezier(.4,0,.2,1);}
-.secret-tab.unlocked{max-width:120px;opacity:1;padding:7px 18px;}
+.tab.active-autohdr{background:var(--autohdr);color:#0a1520;}
+.tab.active-kamel{background:var(--kamel);color:#1a1a0a;}
+.tab.active-scott{background:var(--scott);color:#0a0a1a;}
+.tab.active-changes{background:var(--changes);color:#0a0a0a;}
+
+/* Secret tabs slide in */
+.secret-tab{max-width:0;opacity:0;padding-left:0;padding-right:0;pointer-events:none;transition:max-width .4s cubic-bezier(.4,0,.2,1),opacity .3s ease,padding .4s cubic-bezier(.4,0,.2,1);}
+.secret-tab.unlocked{max-width:120px;opacity:1;padding-left:18px;padding-right:18px;pointer-events:auto;}
+
 .menu-right{display:flex;align-items:center;gap:10px;}
 .theme-btn{background:transparent;border:1px solid var(--border);border-radius:50px;padding:6px 13px;color:var(--text-dim);font-family:'Courier New',monospace;font-size:.68rem;letter-spacing:.08em;cursor:pointer;transition:all .2s;}
 .theme-btn:hover{border-color:var(--text-dim);color:var(--text);}
+
+/* PROPERTY DROPDOWN */
+.property-wrap{position:relative;}
+.property-btn{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.05);border:1px solid var(--border);border-radius:50px;padding:7px 16px;font-family:'Courier New',monospace;font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text);cursor:pointer;white-space:nowrap;transition:border-color .2s;}
+.property-btn:hover{border-color:var(--text-dim);}
+.property-btn .pb-chevron{font-size:.55rem;color:var(--text-muted);transition:transform .25s;}
+.property-btn.open .pb-chevron{transform:rotate(180deg);}
+.property-dropdown{display:none;position:absolute;top:calc(100% + 8px);left:0;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;min-width:220px;z-index:300;box-shadow:0 8px 32px rgba(0,0,0,.4);}
+@media(max-width:680px){.property-dropdown{top:auto;bottom:calc(100% + 8px);left:auto;right:0;}}
+.property-dropdown.open{display:block;}
+.pd-item{display:flex;flex-direction:column;padding:12px 16px;cursor:pointer;border-bottom:1px solid var(--border);transition:background .15s;}
+.pd-item:last-child{border-bottom:none;}
+.pd-item:hover,.pd-item.active{background:var(--surface2);}
+.pd-label{font-family:'Courier New',monospace;font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text);}
+.pd-sub{font-family:'Courier New',monospace;font-size:.58rem;letter-spacing:.08em;color:var(--text-muted);margin-top:2px;}
+.pd-item.active .pd-label{color:var(--autohdr);}
 
 /* MAIN */
 .main{padding-top:calc(var(--menu-h) + 28px);padding-bottom:60px;max-width:1440px;margin:0 auto;padding-left:22px;padding-right:22px;}
@@ -66,8 +78,6 @@ body{background:var(--bg);color:var(--text);font-family:'Georgia',serif;min-heig
 .stats-body{max-height:0;overflow:hidden;transition:max-height .5s cubic-bezier(.4,0,.2,1);background:var(--surface);border:1px solid var(--border);border-top:none;border-radius:0 0 var(--radius) var(--radius);}
 .stats-body.open{max-height:1600px;}
 .stats-inner{padding:24px 20px;}
-
-/* Billing row */
 .billing-row{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:20px;}
 .vol-input-wrap{display:flex;align-items:center;background:var(--surface2);border:1px solid var(--border);border-radius:8px;overflow:hidden;}
 .vol-btn{background:none;border:none;color:var(--text-dim);font-size:1.1rem;padding:8px 14px;cursor:pointer;transition:color .2s;}
@@ -78,12 +88,12 @@ body{background:var(--bg);color:var(--text);font-family:'Georgia',serif;min-heig
 .billing-tab{padding:6px 14px;border-radius:50px;font-family:'Courier New',monospace;font-size:.65rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;color:var(--text-muted);border:none;background:transparent;transition:all .25s;white-space:nowrap;}
 .billing-tab:hover{color:var(--text);}
 .billing-tab.billing-active{background:var(--surface);color:var(--text);border:1px solid var(--border);}
-
-/* Money cards */
 .money-row{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:12px;margin-bottom:24px;}
 @media(max-width:900px){.money-row{grid-template-columns:1fr 1fr;}}
 @media(max-width:680px){.money-row{grid-template-columns:1fr;}}
 .money-card{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:16px;}
+.money-card.clickable{cursor:pointer;}
+.money-card.clickable:hover{border-color:var(--text-dim);}
 .mc-label{font-family:'Courier New',monospace;font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:var(--text-muted);margin-bottom:10px;}
 .money-bars{display:flex;flex-direction:column;gap:8px;}
 .money-bar-row{display:flex;align-items:center;gap:8px;}
@@ -96,7 +106,7 @@ body{background:var(--bg);color:var(--text);font-family:'Georgia',serif;min-heig
 .mb-fill.autohdr{background:var(--autohdr);}
 .mb-val{font-family:'Courier New',monospace;font-size:.68rem;color:var(--text-dim);min-width:52px;text-align:right;transition:all .3s;}
 
-/* Ratings */
+/* RATINGS */
 .ratings-section{border-top:1px solid var(--border);padding-top:20px;}
 .ratings-label{font-family:'Courier New',monospace;font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:var(--text-muted);margin-bottom:14px;}
 .rating-row{display:flex;align-items:center;padding:10px 0;border-bottom:1px solid var(--border);}
@@ -109,96 +119,44 @@ body{background:var(--bg);color:var(--text);font-family:'Georgia',serif;min-heig
 @media(max-width:480px){.pill-opt{padding:5px 7px;font-size:.54rem;letter-spacing:.04em;}}
 .pill-opt.active{color:#0a0a0a;}
 
-/* PROPERTY DROPDOWN */
-.property-wrap { position:relative; }
-.property-btn {
-  display:flex; align-items:center; gap:8px;
-  background:rgba(255,255,255,.05); border:1px solid var(--border);
-  border-radius:50px; padding:7px 16px;
-  font-family:'Courier New',monospace; font-size:.68rem;
-  font-weight:700; letter-spacing:.1em; text-transform:uppercase;
-  color:var(--text); cursor:pointer; white-space:nowrap;
-  transition:border-color .2s;
-}
-.property-btn:hover { border-color:var(--text-dim); }
-.property-btn .pb-chevron { font-size:.55rem; color:var(--text-muted); transition:transform .25s; }
-.property-btn.open .pb-chevron { transform:rotate(180deg); }
-.property-dropdown {
-  display:none; position:absolute; top:calc(100% + 8px); left:0;
-  background:var(--surface); border:1px solid var(--border);
-  border-radius:var(--radius); overflow:hidden; min-width:220px;
-  z-index:300; box-shadow:0 8px 32px rgba(0,0,0,.4);
-}
-@media(max-width:680px){
-  .property-dropdown{top:auto;bottom:calc(100% + 8px);left:auto;right:0;}
-}
-.property-dropdown.open { display:block; }
-.pd-item {
-  display:flex; flex-direction:column;
-  padding:12px 16px; cursor:pointer;
-  border-bottom:1px solid var(--border);
-  transition:background .15s;
-}
-.pd-item:last-child { border-bottom:none; }
-.pd-item:hover { background:var(--surface2); }
-.pd-item.active { background:var(--surface2); }
-.pd-label {
-  font-family:'Courier New',monospace; font-size:.68rem;
-  font-weight:700; letter-spacing:.1em; text-transform:uppercase;
-  color:var(--text);
-}
-.pd-sub {
-  font-family:'Courier New',monospace; font-size:.58rem;
-  letter-spacing:.08em; color:var(--text-muted); margin-top:2px;
-}
-.pd-item.active .pd-label { color:var(--autohdr); }
+/* IMAGE GRID */
 .img-controls{display:flex;align-items:center;justify-content:flex-end;margin-bottom:14px;gap:8px;}
 .nav-btn{background:var(--surface);border:1px solid var(--border);border-radius:50px;padding:8px 22px;color:var(--text);font-family:'Courier New',monospace;font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;transition:all .2s;user-select:none;}
 .nav-btn:hover{border-color:var(--text-dim);}
-
 .image-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px;}
 @media(max-width:680px){.image-grid{grid-template-columns:1fr;}}
-
-.img-stack{position:absolute;inset:0;}
-.img-stack img{
-  position:absolute;inset:0;
-  width:100%;height:100%;
-  object-fit:cover;
-  opacity:0;
-  transition:none;
-}
-#imgGrid.show-autohdr .img-stack img.autohdr { opacity:1; z-index:2; }
-#imgGrid.show-kamel   .img-stack img.kamel   { opacity:1; z-index:2; }
-#imgGrid.show-scott   .img-stack img.scott   { opacity:1; z-index:2; }
-#imgGrid.show-changes .img-stack img.scott   { opacity:1; z-index:2; }
-#imgGrid.show-changes .img-overlay           { opacity:1; z-index:3; }
-
-.img-overlay {
-  position:absolute; inset:0;
-  width:100%; height:100%;
-  object-fit:cover;
-  display:none;
-  pointer-events:none;
-}
-#imgGrid.show-changes .img-overlay { display:block; z-index:3; }
-
 .img-card{position:relative;overflow:hidden;aspect-ratio:4/3;background:var(--surface2);border:1px solid var(--border);transition:border-color .3s;}
-#imgGrid.show-kamel   .img-card { border-color:var(--kamel); }
-#imgGrid.show-autohdr .img-card { border-color:var(--autohdr); }
-#imgGrid.show-scott   .img-card { border-color:var(--scott); }
+.img-stack{position:absolute;inset:0;}
+.img-stack img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:none;}
 
-.img-badge { position:absolute;bottom:10px;left:10px;padding:4px 10px;border-radius:50px;font-family:'Courier New',monospace;font-size:.58rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;backdrop-filter:blur(12px);z-index:10; }
-.img-badge.kamel   { background:rgba(240,217,140,.18);color:var(--kamel);border:1px solid rgba(240,217,140,.25); display:none; }
-.img-badge.autohdr { background:rgba(126,184,232,.18);color:var(--autohdr);border:1px solid rgba(126,184,232,.25); display:none; }
-.img-badge.scott   { background:rgba(184,159,240,.18);color:var(--scott);border:1px solid rgba(184,159,240,.25); display:none; }
-.img-badge.changes { background:rgba(240,168,192,.18);color:var(--changes);border:1px solid rgba(240,168,192,.25); display:none; }
-#imgGrid.show-kamel   .img-badge.kamel   { display:block; }
-#imgGrid.show-autohdr .img-badge.autohdr { display:block; }
-#imgGrid.show-scott   .img-badge.scott   { display:block; }
-#imgGrid.show-changes .img-badge.changes { display:block; }
+/* Active image per editor */
+#imgGrid.show-autohdr .img-stack img.autohdr{opacity:1;z-index:2;}
+#imgGrid.show-kamel   .img-stack img.kamel  {opacity:1;z-index:2;}
+#imgGrid.show-scott   .img-stack img.scott  {opacity:1;z-index:2;}
+#imgGrid.show-changes .img-stack img.scott  {opacity:1;z-index:2;}
+
+/* Card border per editor */
+#imgGrid.show-autohdr .img-card{border-color:var(--autohdr);}
+#imgGrid.show-kamel   .img-card{border-color:var(--kamel);}
+#imgGrid.show-scott   .img-card{border-color:var(--scott);}
+#imgGrid.show-changes .img-card{border-color:var(--changes);}
+
+/* Badges */
+.img-badge{position:absolute;bottom:10px;left:10px;padding:4px 10px;border-radius:50px;font-family:'Courier New',monospace;font-size:.58rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;backdrop-filter:blur(12px);z-index:10;display:none;}
+.img-badge.autohdr{background:rgba(126,184,232,.18);color:var(--autohdr);border:1px solid rgba(126,184,232,.25);}
+.img-badge.kamel  {background:rgba(240,217,140,.18);color:var(--kamel);border:1px solid rgba(240,217,140,.25);}
+.img-badge.scott  {background:rgba(184,159,240,.18);color:var(--scott);border:1px solid rgba(184,159,240,.25);}
+.img-badge.changes{background:rgba(240,168,192,.18);color:var(--changes);border:1px solid rgba(240,168,192,.25);}
+#imgGrid.show-autohdr .img-badge.autohdr{display:block;}
+#imgGrid.show-kamel   .img-badge.kamel  {display:block;}
+#imgGrid.show-scott   .img-badge.scott  {display:block;}
+#imgGrid.show-changes .img-badge.changes{display:block;}
+
+/* Overlay — only visible in Changes */
+.img-overlay{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:none;pointer-events:none;z-index:5;}
+#imgGrid.show-changes .img-overlay{display:block;}
 
 .img-num{position:absolute;top:10px;right:10px;background:rgba(0,0,0,.5);backdrop-filter:blur(8px);color:var(--text-dim);font-family:'Courier New',monospace;font-size:.56rem;letter-spacing:.1em;padding:3px 8px;border-radius:50px;z-index:10;}
-
 .dots{display:flex;gap:5px;justify-content:center;margin-top:16px;}
 .dot{width:5px;height:5px;border-radius:50%;background:var(--border);cursor:pointer;transition:all .2s;}
 .dot.on{background:var(--text-dim);transform:scale(1.4);}
@@ -211,7 +169,6 @@ body{background:var(--bg);color:var(--text);font-family:'Georgia',serif;min-heig
     <div class="menu-brand">Edit Compare</div>
   </div>
 
-  <!-- Property dropdown -->
   <div class="property-wrap" id="propWrap">
     <button class="property-btn" id="propBtn" onclick="togglePropDropdown()">
       <span id="propBtnLabel">7106 E Shields Dr</span>
@@ -229,19 +186,19 @@ body{background:var(--bg);color:var(--text);font-family:'Georgia',serif;min-heig
     </div>
   </div>
 
-  <div class="editor-tabs">
-    <button class="tab aa" data-ed="autohdr" onclick="switchEditor('autohdr')">AutoHDR</button>
-    <button class="tab" data-ed="kamel" onclick="switchEditor('kamel')">Kamel</button>
-    <button class="tab secret-tab" id="scottTab" data-ed="scott" onclick="switchEditor('scott')">Scott</button>
+  <div class="editor-tabs" id="editorTabs">
+    <button class="tab" data-ed="autohdr" onclick="switchEditor('autohdr')">AutoHDR</button>
+    <button class="tab" data-ed="kamel"   onclick="switchEditor('kamel')">Kamel</button>
+    <button class="tab secret-tab" id="scottTab"   data-ed="scott"   onclick="switchEditor('scott')">Scott</button>
     <button class="tab secret-tab" id="changesTab" data-ed="changes" onclick="switchEditor('changes')">Changes</button>
   </div>
+
   <div class="menu-right">
     <button class="theme-btn" onclick="toggleTheme()">◑</button>
   </div>
 </nav>
 
 <main class="main">
-
   <div class="stats-wrap">
     <div class="stats-bar" id="sBar" onclick="toggleStats()">
       <span class="stats-bar-title">Editor Comparison</span>
@@ -277,14 +234,14 @@ body{background:var(--bg);color:var(--text);font-family:'Georgia',serif;min-heig
               <div class="money-bar-row"><div class="mb-name autohdr">AutoHDR</div><div class="mb-track"><div id="barRateA" class="mb-fill autohdr" style="width:60%"></div></div><div class="mb-val" id="rateAuto">$0.45</div></div>
             </div>
           </div>
-          <div class="money-card" onclick="unlockSecret()" style="cursor:pointer;">
+          <div class="money-card clickable" onclick="unlockSecret()">
             <div class="mc-label">Est. Monthly</div>
             <div class="money-bars">
               <div class="money-bar-row"><div class="mb-name kamel">Kamel</div><div class="mb-track"><div id="barKamelM" class="mb-fill kamel" style="width:100%"></div></div><div class="mb-val" id="valKamelM">$3,750</div></div>
               <div class="money-bar-row"><div class="mb-name autohdr">AutoHDR</div><div class="mb-track"><div id="barAutoM" class="mb-fill autohdr" style="width:60%"></div></div><div class="mb-val" id="valAutoM">$2,250</div></div>
             </div>
           </div>
-          <div class="money-card" onclick="unlockRatings()" style="cursor:pointer;">
+          <div class="money-card clickable" onclick="toggleRatings()">
             <div class="mc-label">Est. Annual</div>
             <div class="money-bars">
               <div class="money-bar-row"><div class="mb-name kamel">Kamel</div><div class="mb-track"><div id="barKamelY" class="mb-fill kamel" style="width:100%"></div></div><div class="mb-val" id="valKamelY">$45,000</div></div>
@@ -293,7 +250,7 @@ body{background:var(--bg);color:var(--text);font-family:'Georgia',serif;min-heig
           </div>
         </div>
 
-        <div class="ratings-section" id="ratingsSection" style="display:none;border-top:1px solid var(--border);padding-top:20px;">
+        <div class="ratings-section" id="ratingsSection" style="display:none;">
           <div class="ratings-label">Quality Ratings</div>
           <div id="ratingsContainer"></div>
         </div>
@@ -307,10 +264,10 @@ body{background:var(--bg);color:var(--text);font-family:'Georgia',serif;min-heig
   </div>
   <div class="image-grid" id="imgGrid"></div>
   <div class="dots" id="dotsRow"></div>
-
 </main>
 
 <script>
+// ── DATA ─────────────────────────────────────────────────
 const PROPERTIES = [
   {
     label: '7106 E Shields Dr',
@@ -341,8 +298,6 @@ const PROPERTIES = [
       ['2389 N Silver Wolf Ave (5).jpg',  '2026-assets-images-cbhhomes-subdivision-floorplan-3.jpg'],
       ['2389 N Silver Wolf Ave (6).jpg',  '2026-assets-images-cbhhomes-subdivision-floorplan-4.jpg'],
       ['2389 N Silver Wolf Ave (7).jpg',  '2026-assets-images-cbhhomes-subdivision-floorplan-7.jpg'],
-      ['2389 N Silver Wolf Ave (8).jpg',  '2026-assets-images-cbhhomes-subdivision-floorplan-8.jpg'],
-      ['2389 N Silver Wolf Ave (9).jpg',  '2026-assets-images-cbhhomes-subdivision-floorplan-9.jpg'],
       ['2389 N Silver Wolf Ave (8).jpg',  '2026-assets-images-cbhhomes-subdivision-floorplan-8.jpg'],
       ['2389 N Silver Wolf Ave (9).jpg',  '2026-assets-images-cbhhomes-subdivision-floorplan-9.jpg'],
       ['2389 N Silver Wolf Ave (10).jpg', '2026-assets-images-cbhhomes-subdivision-floorplan-10.jpg'],
@@ -379,207 +334,173 @@ const PROPERTIES = [
   }
 ];
 
-let currentProperty = 0;
-let PAIRS = PROPERTIES[0].pairs;
-
-const PATHS = { autohdr:'AUTOHDR_web/', kamel:'Editors_web/', scott:'Scott_web/', changes:'Scott_web/' };
+const PATHS = { autohdr:'AUTOHDR_web/', kamel:'Editors_web/', scott:'Overlay/' };
 
 const EDITORS = {
-  autohdr: {
-    label:'AutoHDR', color:'autohdr',
-    ratings:{ 'Interiors':'best','Exteriors':'better','Window Pulls':'best','Straightening':'better','Communication':'good','Completion':'better','Detail Oriented':'good','Price':'best' }
-  },
-  kamel: {
-    label:'Kamel', color:'kamel',
-    ratings:{ 'Interiors':'better','Exteriors':'good','Window Pulls':'good','Straightening':'good','Communication':'bad','Completion':'good','Detail Oriented':'good','Price':'better' }
-  },
-  scott: {
-    label:'Scott', color:'scott',
-    ratings:{ 'Interiors':'best','Exteriors':'best','Window Pulls':'better','Straightening':'best','Communication':'best','Completion':'best','Detail Oriented':'best','Price':'best' }
-  },
-  changes: {
-    label:'Changes', color:'changes',
-    ratings:{ 'Interiors':'best','Exteriors':'best','Window Pulls':'best','Straightening':'best','Communication':'best','Completion':'best','Detail Oriented':'best','Price':'best' }
-  }
+  autohdr: { label:'AutoHDR', ratings:{ 'Interiors':'best','Exteriors':'better','Window Pulls':'best','Straightening':'better','Communication':'good','Completion':'better','Detail Oriented':'good','Price':'best' } },
+  kamel:   { label:'Kamel',   ratings:{ 'Interiors':'better','Exteriors':'good','Window Pulls':'good','Straightening':'good','Communication':'bad','Completion':'good','Detail Oriented':'good','Price':'better' } },
+  scott:   { label:'Scott',   ratings:{ 'Interiors':'best','Exteriors':'best','Window Pulls':'better','Straightening':'best','Communication':'best','Completion':'best','Detail Oriented':'best','Price':'best' } },
+  changes: { label:'Changes', ratings:{ 'Interiors':'best','Exteriors':'best','Window Pulls':'best','Straightening':'best','Communication':'best','Completion':'best','Detail Oriented':'best','Price':'best' } }
 };
-
-let secretUnlocked = false;
-
-function unlockSecret() {
-  secretUnlocked = !secretUnlocked;
-  document.getElementById('scottTab').classList.toggle('unlocked', secretUnlocked);
-  document.getElementById('changesTab').classList.toggle('unlocked', secretUnlocked);
-  if (!secretUnlocked) {
-    // Always force back to autohdr when locking, regardless of current tab
-    currentEditor = 'autohdr';
-    switchEditor('autohdr', true);
-  }
-  buildRatings();
-  setTimeout(() => positionSliders(currentEditor, false), 50);
-}
 
 const SCALE  = ['bad','good','better','best'];
 const COLORS = { bad:'#e05252', good:'#d4a84b', better:'#c8c060', best:'#8ab870' };
 const RATE   = { monthly:{kamel:0.75,autohdr:0.45}, annually:{kamel:0.75,autohdr:0.41} };
 
+let currentProperty = 0;
+let PAIRS = PROPERTIES[0].pairs;
 let currentEditor = 'autohdr';
 let billingPeriod = 'monthly';
+let secretUnlocked = false;
 
-// ── PROPERTY SWITCHER ────────────────────────────────────
+// ── SECRET UNLOCK ─────────────────────────────────────────
+function unlockSecret() {
+  secretUnlocked = !secretUnlocked;
+  document.getElementById('scottTab').classList.toggle('unlocked', secretUnlocked);
+  document.getElementById('changesTab').classList.toggle('unlocked', secretUnlocked);
+  if (!secretUnlocked) {
+    switchEditor('autohdr');
+  }
+}
+
+// ── SWITCH EDITOR ─────────────────────────────────────────
+function switchEditor(ed) {
+  if ((ed === 'scott' || ed === 'changes') && !secretUnlocked) return;
+  currentEditor = ed;
+
+  // Reset all tabs then highlight the active one
+  document.querySelectorAll('.tab').forEach(t => {
+    t.classList.remove('active-autohdr','active-kamel','active-scott','active-changes');
+    if (t.dataset.ed === ed) t.classList.add('active-' + ed);
+  });
+
+  // Update grid
+  const grid = document.getElementById('imgGrid');
+  grid.className = 'image-grid show-' + ed;
+
+  positionSliders(ed, true);
+  updateDots();
+}
+
+function switchToOther(dir) {
+  const all = ['autohdr','kamel','scott','changes'];
+  const visible = all.filter(k => k === 'autohdr' || k === 'kamel' || secretUnlocked);
+  const idx = visible.indexOf(currentEditor);
+  const next = visible[(idx + dir + visible.length) % visible.length];
+  switchEditor(next);
+}
+
+// ── PROPERTY ─────────────────────────────────────────────
 function togglePropDropdown() {
-  const btn = document.getElementById('propBtn');
-  const dd  = document.getElementById('propDropdown');
-  btn.classList.toggle('open');
-  dd.classList.toggle('open');
+  document.getElementById('propBtn').classList.toggle('open');
+  document.getElementById('propDropdown').classList.toggle('open');
 }
 
 function selectProperty(idx) {
   currentProperty = idx;
   PAIRS = PROPERTIES[idx].pairs;
-
   document.getElementById('propBtnLabel').textContent = PROPERTIES[idx].label;
-
-  document.querySelectorAll('.pd-item').forEach(el => {
-    el.classList.toggle('active', parseInt(el.dataset.prop) === idx);
-  });
-
+  document.querySelectorAll('.pd-item').forEach(el => el.classList.toggle('active', parseInt(el.dataset.prop) === idx));
   document.getElementById('propBtn').classList.remove('open');
   document.getElementById('propDropdown').classList.remove('open');
-
-  const grid = document.getElementById('imgGrid');
-  grid.innerHTML = '';
   buildGrid();
 }
 
 document.addEventListener('click', e => {
   const wrap = document.getElementById('propWrap');
-  if(wrap && !wrap.contains(e.target)) {
+  if (wrap && !wrap.contains(e.target)) {
     document.getElementById('propBtn').classList.remove('open');
     document.getElementById('propDropdown').classList.remove('open');
   }
 });
 
-// ── GRID ─────────────────────────────────────────────────
+// ── BUILD GRID ───────────────────────────────────────────
 function buildGrid() {
   const grid = document.getElementById('imgGrid');
-  grid.classList.remove('show-autohdr', 'show-kamel');
-  grid.classList.add('show-' + currentEditor);
+  grid.innerHTML = '';
+  grid.className = 'image-grid show-' + currentEditor;
 
-  if(!PAIRS.length) {
+  if (!PAIRS.length) {
     grid.innerHTML = `<div style="grid-column:1/-1;padding:60px 0;text-align:center;font-family:'Courier New',monospace;font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;color:var(--text-muted);">No images yet — coming soon</div>`;
     return;
   }
 
+  const prop = PROPERTIES[currentProperty];
+
   PAIRS.forEach((pair, i) => {
     const card = document.createElement('div');
-    const prop = PROPERTIES[currentProperty];
-    const overlayPath = prop.overlayPath || 'Overlay/';
-    const overlayPrefix = prop.overlayPrefix || 'ScottOverlay';
     card.className = 'img-card';
 
     const stack = document.createElement('div');
     stack.className = 'img-stack';
 
+    // AutoHDR image (pair[0])
     const imgA = document.createElement('img');
     imgA.className = 'autohdr';
     imgA.src = PATHS.autohdr + pair[0];
-    imgA.alt = `AutoHDR ${i+1}`;
+    imgA.alt = 'AutoHDR ' + (i+1);
     imgA.decoding = 'auto';
+    stack.appendChild(imgA);
 
+    // Kamel image (pair[1])
     const imgK = document.createElement('img');
     imgK.className = 'kamel';
     imgK.src = PATHS.kamel + pair[1];
-    imgK.alt = `Kamel ${i+1}`;
+    imgK.alt = 'Kamel ' + (i+1);
     imgK.decoding = 'auto';
+    stack.appendChild(imgK);
 
+    // Scott image (same angle as AutoHDR)
     const imgS = document.createElement('img');
     imgS.className = 'scott';
-    imgS.src = PATHS.scott + pair[0];
-    imgS.alt = `Scott ${i+1}`;
+    imgS.src = PATHS.scott + 'Scott' + (i+1) + '.jpg';
+    imgS.alt = 'Scott ' + (i+1);
     imgS.decoding = 'auto';
     stack.appendChild(imgS);
 
-    const badgeS = document.createElement('div');
-    badgeS.className = 'img-badge scott';
-    badgeS.textContent = EDITORS.scott.label;
-    card.appendChild(badgeS);
-
-    stack.appendChild(imgA);
-    stack.appendChild(imgK);
-    const badgeC = document.createElement('div');
-    badgeC.className = 'img-badge changes';
-    badgeC.textContent = EDITORS.changes.label;
-    card.appendChild(badgeC);
-
     card.appendChild(stack);
 
-    // Overlay PNG — only for properties that have overlays defined
-    if(prop.overlayPath) {
-      const overlay = document.createElement('img');
-      overlay.className = 'img-overlay';
-      overlay.src = overlayPath + overlayPrefix + (i+1) + '.png';
-      overlay.alt = `Changes overlay ${i+1}`;
-      overlay.style.display = 'none';
-      card.appendChild(overlay);
+    // Badges
+    ['autohdr','kamel','scott','changes'].forEach(ed => {
+      const b = document.createElement('div');
+      b.className = 'img-badge ' + ed;
+      b.textContent = EDITORS[ed].label;
+      card.appendChild(b);
+    });
+
+    // Overlay (only if property has overlays)
+    if (prop.overlayPath) {
+      const ov = document.createElement('img');
+      ov.className = 'img-overlay';
+      ov.src = prop.overlayPath + prop.overlayPrefix + (i+1) + '.png';
+      ov.alt = 'Overlay ' + (i+1);
+      card.appendChild(ov);
     }
 
-    const badgeA = document.createElement('div');
-    badgeA.className = 'img-badge autohdr';
-    badgeA.textContent = EDITORS.autohdr.label;
-    card.appendChild(badgeA);
-
-    const badgeK = document.createElement('div');
-    badgeK.className = 'img-badge kamel';
-    badgeK.textContent = EDITORS.kamel.label;
-    card.appendChild(badgeK);
-
+    // Image number
     const num = document.createElement('div');
     num.className = 'img-num';
     num.textContent = String(i+1).padStart(2,'0');
     card.appendChild(num);
 
-    card.addEventListener('click', () => {
-      if(window.innerWidth <= 680) switchToOther(1);
-    });
+    // Mobile tap to switch
+    card.addEventListener('click', () => { if (window.innerWidth <= 680) switchToOther(1); });
 
     grid.appendChild(card);
   });
 }
 
-// ── SWITCH ───────────────────────────────────────────────
-function switchEditor(ed, animate=true) {
-  if (ed === 'scott' && !secretUnlocked) return;
-  currentEditor = ed;
-  document.querySelectorAll('.tab').forEach(t => {
-    t.className = t.id === 'scottTab'
-      ? 'tab secret-tab' + (secretUnlocked ? ' unlocked' : '')
-      : 'tab';
-    if(t.dataset.ed === ed) t.classList.add('a' + ed[0]);
-  });
-  const grid = document.getElementById('imgGrid');
-  grid.classList.remove('show-autohdr','show-kamel','show-scott');
-  grid.classList.add('show-' + ed);
-  positionSliders(ed, animate);
-  updateDots();
-}
-
-function switchToOther(dir) {
-  const keys = Object.keys(EDITORS).filter(k => !['scott','changes'].includes(k) || secretUnlocked);
-  switchEditor(keys[(keys.indexOf(currentEditor) + dir + keys.length) % keys.length], true);
-}
-
 // ── CALC ─────────────────────────────────────────────────
-function fmt(n){ return '$' + n.toLocaleString('en-US',{maximumFractionDigits:0}); }
+function fmt(n) { return '$' + n.toLocaleString('en-US',{maximumFractionDigits:0}); }
 
 function updateCalc() {
   const vol = Math.max(1, parseInt(document.getElementById('volInput').value) || 5000);
-  const r   = RATE[billingPeriod];
-  const km  = vol * r.kamel,  am  = vol * r.autohdr;
-  const ky  = km * 12,        ay  = am * 12;
+  const r = RATE[billingPeriod];
+  const km = vol*r.kamel, am = vol*r.autohdr;
+  const ky = km*12, ay = am*12;
   const maxM = Math.max(km,am), maxY = Math.max(ky,ay), maxR = Math.max(r.kamel,r.autohdr);
-
-  document.getElementById('rateKamel').textContent = '$' + r.kamel.toFixed(2);
-  document.getElementById('rateAuto').textContent  = '$' + r.autohdr.toFixed(2);
+  document.getElementById('rateKamel').textContent = '$'+r.kamel.toFixed(2);
+  document.getElementById('rateAuto').textContent  = '$'+r.autohdr.toFixed(2);
   document.getElementById('barRateK').style.width  = (r.kamel/maxR*100)+'%';
   document.getElementById('barRateA').style.width  = (r.autohdr/maxR*100)+'%';
   document.getElementById('valKamelM').textContent = fmt(km);
@@ -600,20 +521,18 @@ function stepVol(delta) {
 
 function setBilling(period) {
   billingPeriod = period;
-  document.querySelectorAll('.billing-tab').forEach(t => {
-    t.classList.toggle('billing-active', t.dataset.period === period);
-  });
+  document.querySelectorAll('.billing-tab').forEach(t => t.classList.toggle('billing-active', t.dataset.period === period));
   updateCalc();
 }
 
-function unlockRatings() {
+// ── RATINGS ──────────────────────────────────────────────
+function toggleRatings() {
   const s = document.getElementById('ratingsSection');
-  const isHidden = s.style.display === 'none';
-  s.style.display = isHidden ? 'block' : 'none';
-  if(isHidden) setTimeout(() => positionSliders(currentEditor, false), 50);
+  const opening = s.style.display === 'none';
+  s.style.display = opening ? 'block' : 'none';
+  if (opening) setTimeout(() => positionSliders(currentEditor, false), 50);
 }
 
-// ── RATINGS ──────────────────────────────────────────────
 function buildRatings() {
   const container = document.getElementById('ratingsContainer');
   container.innerHTML = '';
@@ -622,18 +541,23 @@ function buildRatings() {
     const row = document.createElement('div');
     row.className = 'rating-row';
     const label = document.createElement('div');
-    label.className = 'rr-metric'; label.textContent = m;
+    label.className = 'rr-metric';
+    label.textContent = m;
     row.appendChild(label);
     const track = document.createElement('div');
-    track.className = 'pill-track'; track.id = 'pt_'+key;
+    track.className = 'pill-track';
+    track.id = 'pt_'+key;
     const slider = document.createElement('div');
-    slider.className = 'pill-slider'; slider.id = 'ps_'+key;
-    slider.style.cssText = 'left:3px;width:0;opacity:0;transition:none;';
+    slider.className = 'pill-slider';
+    slider.id = 'ps_'+key;
+    slider.style.cssText = 'left:3px;width:0;opacity:0;';
     track.appendChild(slider);
     SCALE.forEach(s => {
       const opt = document.createElement('div');
-      opt.className = 'pill-opt'; opt.id = 'po_'+key+'_'+s;
-      opt.textContent = s; track.appendChild(opt);
+      opt.className = 'pill-opt';
+      opt.id = 'po_'+key+'_'+s;
+      opt.textContent = s;
+      track.appendChild(opt);
     });
     row.appendChild(track);
     container.appendChild(row);
@@ -641,46 +565,47 @@ function buildRatings() {
 }
 
 function positionSliders(ed, animate) {
-  Object.keys(EDITORS[ed].ratings).forEach(m => {
-    const key    = m.replace(/\s/g,'_');
-    const rating = EDITORS[ed].ratings[m];
+  const edKey = (ed === 'changes') ? 'scott' : ed;
+  if (!EDITORS[edKey]) return;
+  Object.keys(EDITORS[edKey].ratings).forEach(m => {
+    const key = m.replace(/\s/g,'_');
+    const rating = EDITORS[edKey].ratings[m];
     const slider = document.getElementById('ps_'+key);
     const track  = document.getElementById('pt_'+key);
-    if(!slider||!track) return;
+    if (!slider || !track) return;
     SCALE.forEach(s => {
       const o = document.getElementById('po_'+key+'_'+s);
-      if(o){ o.classList.toggle('active',s===rating); o.style.color=s===rating?'#0a0a0a':''; }
+      if (o) { o.classList.toggle('active', s===rating); o.style.color = s===rating ? '#0a0a0a' : ''; }
     });
-    if(!rating){ slider.style.opacity='0'; return; }
     const activeOpt = document.getElementById('po_'+key+'_'+rating);
-    if(!activeOpt) return;
+    if (!activeOpt) return;
     const tR = track.getBoundingClientRect(), oR = activeOpt.getBoundingClientRect();
-    if(!animate){
-      slider.style.transition='none';
-      slider.style.left=(oR.left-tR.left)+'px';
-      slider.style.width=oR.width+'px';
-      slider.style.background=COLORS[rating];
-      slider.style.opacity='1';
+    if (!animate) {
+      slider.style.transition = 'none';
+      slider.style.left = (oR.left-tR.left)+'px';
+      slider.style.width = oR.width+'px';
+      slider.style.background = COLORS[rating];
+      slider.style.opacity = '1';
       slider.getBoundingClientRect();
-      slider.style.transition='';
+      slider.style.transition = '';
     } else {
-      slider.style.transition='';
-      slider.style.left=(oR.left-tR.left)+'px';
-      slider.style.width=oR.width+'px';
-      slider.style.background=COLORS[rating];
-      slider.style.opacity='1';
+      slider.style.left = (oR.left-tR.left)+'px';
+      slider.style.width = oR.width+'px';
+      slider.style.background = COLORS[rating];
+      slider.style.opacity = '1';
     }
   });
 }
 
 // ── DOTS ─────────────────────────────────────────────────
 function updateDots() {
-  const c = document.getElementById('dotsRow'); c.innerHTML='';
-  const keys = Object.keys(EDITORS).filter(k => k !== 'scott' || secretUnlocked);
-  keys.forEach(ed => {
+  const c = document.getElementById('dotsRow');
+  c.innerHTML = '';
+  const visible = ['autohdr','kamel'].concat(secretUnlocked ? ['scott','changes'] : []);
+  visible.forEach(ed => {
     const d = document.createElement('div');
-    d.className = 'dot'+(ed===currentEditor?' on':'');
-    d.onclick = () => switchEditor(ed,true);
+    d.className = 'dot' + (ed === currentEditor ? ' on' : '');
+    d.onclick = () => switchEditor(ed);
     c.appendChild(d);
   });
 }
@@ -701,48 +626,47 @@ function toggleTheme() {
 
 // ── KEYBOARD ─────────────────────────────────────────────
 let currentCardIndex = 0;
-let scrollRaf = null;
 
 function scrollToCard(index) {
   const cards = Array.from(document.querySelectorAll('.img-card'));
-  if(!cards.length) return;
+  if (!cards.length) return;
   const cols = window.innerWidth > 680 ? 2 : 1;
-  currentCardIndex = Math.max(0, Math.min(index, cards.length - 1));
+  currentCardIndex = Math.max(0, Math.min(index, cards.length-1));
   const menuH = document.querySelector('.menu').offsetHeight + 16;
   const target = cards[currentCardIndex].getBoundingClientRect().top + window.scrollY - menuH;
-  if(scrollRaf) cancelAnimationFrame(scrollRaf);
   window.scrollTo({ top: target, behavior: 'instant' });
 }
 
 document.addEventListener('keydown', e => {
-  if(e.key === 'ArrowLeft')  { switchToOther(-1); return; }
-  if(e.key === 'ArrowRight') { switchToOther(1);  return; }
-  if(e.key === 'n' || e.key === 'N') { selectProperty(Math.min(currentProperty + 1, PROPERTIES.length - 1)); return; }
-  if(e.key === 'p' || e.key === 'P') { selectProperty(Math.max(currentProperty - 1, 0)); return; }
+  if (e.key === 'ArrowLeft')  { switchToOther(-1); return; }
+  if (e.key === 'ArrowRight') { switchToOther(1);  return; }
+  if (e.key === 'n' || e.key === 'N') { selectProperty(Math.min(currentProperty+1, PROPERTIES.length-1)); return; }
+  if (e.key === 'p' || e.key === 'P') { selectProperty(Math.max(currentProperty-1, 0)); return; }
   const cols = window.innerWidth > 680 ? 2 : 1;
-  if(e.key === 'ArrowDown')  { e.preventDefault(); scrollToCard(currentCardIndex + cols); }
-  if(e.key === 'ArrowUp')    { e.preventDefault(); scrollToCard(currentCardIndex - cols); }
+  if (e.key === 'ArrowDown') { e.preventDefault(); scrollToCard(currentCardIndex+cols); }
+  if (e.key === 'ArrowUp')   { e.preventDefault(); scrollToCard(currentCardIndex-cols); }
 });
 
-// ── SWIPE (trackpad only) ─────────────────────────────────
+// ── TRACKPAD SWIPE ───────────────────────────────────────
 let trackpadAccX = 0, trackpadTimer = null;
-document.addEventListener('wheel', e=>{
-  if(Math.abs(e.deltaX)<Math.abs(e.deltaY)) return;
+document.addEventListener('wheel', e => {
+  if (Math.abs(e.deltaX) < Math.abs(e.deltaY)) return;
   e.preventDefault();
   trackpadAccX += e.deltaX;
   clearTimeout(trackpadTimer);
-  trackpadTimer = setTimeout(()=>{
-    if(Math.abs(trackpadAccX)>60) switchToOther(trackpadAccX>0?1:-1);
-    trackpadAccX=0;
-  },80);
-},{passive:false});
+  trackpadTimer = setTimeout(() => {
+    if (Math.abs(trackpadAccX) > 60) switchToOther(trackpadAccX > 0 ? 1 : -1);
+    trackpadAccX = 0;
+  }, 80);
+}, { passive: false });
 
 // ── INIT ─────────────────────────────────────────────────
 buildRatings();
 buildGrid();
+switchEditor('autohdr');
 updateDots();
 updateCalc();
-setTimeout(() => positionSliders(currentEditor, false), 1000);
+setTimeout(() => positionSliders('autohdr', false), 500);
 window.addEventListener('resize', () => positionSliders(currentEditor, false));
 </script>
 </body>
